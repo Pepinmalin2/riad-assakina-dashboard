@@ -229,7 +229,7 @@
 
 <script>
 // ── Auth
-const PWD_HASH = '4fd8732fe32e7c7618d7a60938720bf87e10fb01f9c5432e0bb6ca0c81699d44'; // SHA-256 de "Assakina"
+const PWD_HASH = 'c9553bef0966b272a080335ccf08c6e43dc53944ae682b7945206910e15b57dc'; // SHA-256 de "Assakina"
 async function checkPwd() {
   const val = document.getElementById('pwd-input').value;
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
