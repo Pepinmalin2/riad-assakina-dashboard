@@ -147,6 +147,14 @@
     @media (max-width: 768px) {
       .charts-grid { grid-template-columns: 1fr; }
       main { padding: 16px; }
+      .tooltip-box {
+        max-width: 220px;
+        font-size: 0.74rem;
+        padding: 9px 12px;
+        line-height: 1.45;
+      }
+      .tooltip-box strong { font-size: 0.76rem; margin-bottom: 4px; }
+      .tooltip-box .formula { font-size: 0.68rem; margin-top: 5px; }
     }
   </style>
 </head>
@@ -290,7 +298,7 @@ function renderKPIs() {
     { label: "Prix acquisition", value: '1 300 K€',  sub: 'Immeuble + Fonds de commerce',                                      badge: 'neutral', badgeTxt: '248 m² + piscine' },
   ];
   document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
-    <div class="kpi-card" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()" ontouchstart="toggleTip(event,this)">
+    <div class="kpi-card" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()">
       <i class="info-icon">i</i>
       <div class="label">${k.label}</div>
       <div class="value">${k.value}</div>
@@ -320,14 +328,30 @@ function positionTip(e) {
   tip.style.top  = (y + 16 + th > vh ? y - th - 8 : y + 16) + 'px';
 }
 function hideTip() { tip.style.display = 'none'; }
-function toggleTip(e, card) {
-  e.preventDefault();
-  if (tip.style.display === 'block' && tip._card === card) { hideTip(); tip._card = null; return; }
-  tip._card = card;
-  showTip(e, card);
-}
-document.addEventListener('mousemove', e => { if (tip.style.display === 'block' && !tip._card) positionTip(e); });
-document.addEventListener('touchstart', e => { if (tip.style.display === 'block' && !e.target.closest('.kpi-card')) hideTip(); }, { passive: true });
+
+// Souris
+document.addEventListener('mousemove', e => { if (tip.style.display === 'block') positionTip(e); });
+
+// Appui prolongé sur mobile (500ms)
+let _longTimer = null;
+document.addEventListener('touchstart', e => {
+  const card = e.target.closest('.kpi-card');
+  if (!card) { hideTip(); return; }
+  const touch = e.touches[0];
+  _longTimer = setTimeout(() => {
+    if (navigator.vibrate) navigator.vibrate(30);
+    showTip({ clientX: touch.clientX, clientY: touch.clientY }, card);
+    _longTimer = null;
+  }, 500);
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
+}, { passive: true });
+
+document.addEventListener('touchmove', () => {
+  if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
+}, { passive: true });
 
 // ── Tableau financier
 function renderFinTable() {
