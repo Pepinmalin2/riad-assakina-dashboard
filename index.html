@@ -146,73 +146,62 @@
 
     /* ── ANALYSE SYNTHÉTIQUE */
     .analyse-wrap { margin-bottom: 32px; }
-    .analyse-intro {
-      background: linear-gradient(135deg, var(--terracotta) 0%, #6B3010 100%);
-      color: white; border-radius: 14px; padding: 24px 28px;
-      margin-bottom: 20px; display: flex; align-items: flex-start; gap: 18px;
-    }
-    .analyse-intro-icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
-    .analyse-intro h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-    .analyse-intro p  { font-size: 0.84rem; opacity: .85; line-height: 1.55; }
-    .analyse-intro .meta { font-size: 0.72rem; opacity: .6; margin-top: 8px; }
 
-    .analyse-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    .analyse-card {
-      background: var(--card-bg); border-radius: 12px; padding: 22px;
-      box-shadow: var(--shadow); border-top: 4px solid var(--border);
+    .synthese-banner {
+      background: linear-gradient(135deg, var(--terracotta) 0%, #6B3010 100%);
+      color: white; border-radius: 14px; padding: 22px 26px;
+      margin-bottom: 14px;
     }
-    .analyse-card.vert    { border-top-color: var(--green); }
-    .analyse-card.rouge   { border-top-color: var(--red); }
-    .analyse-card.orange  { border-top-color: #F59E0B; }
-    .analyse-card.bleu    { border-top-color: #3B82F6; }
-    .analyse-card h3 {
-      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .7px; color: var(--text-light); margin-bottom: 14px;
-      display: flex; align-items: center; gap: 7px;
+    .synthese-banner .tag {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--gold); margin-bottom: 10px;
     }
-    .analyse-card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-    .analyse-card ul li {
-      font-size: 0.84rem; line-height: 1.5; color: var(--text);
-      padding-left: 18px; position: relative;
+    .synthese-banner p { font-size: 0.88rem; line-height: 1.7; opacity: .92; }
+    .synthese-banner p strong { color: var(--gold); font-weight: 700; }
+
+    /* Accordéon */
+    .accordion { display: flex; flex-direction: column; gap: 8px; }
+    .acc-item { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+    .acc-btn {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+      text-align: left; transition: background .15s;
     }
-    .analyse-card ul li::before {
-      content: attr(data-bullet);
-      position: absolute; left: 0; font-size: 0.8rem;
+    .acc-btn:hover { background: #FAF5F0; }
+    .acc-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .acc-label { flex: 1; font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .acc-arrow {
+      font-size: 0.75rem; color: var(--text-light);
+      transition: transform .25s; flex-shrink: 0;
     }
-    .analyse-card ul li strong { color: var(--terracotta); }
+    .acc-item.open .acc-arrow { transform: rotate(180deg); }
+    .acc-strip { width: 4px; border-radius: 2px; height: 20px; flex-shrink: 0; }
+    .acc-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .25s ease;
+      padding: 0 20px;
+    }
+    .acc-item.open .acc-body { max-height: 1200px; padding: 0 20px 20px; }
+    .acc-body ul { list-style: none; display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
+    .acc-body ul li { font-size: 0.84rem; line-height: 1.55; color: var(--text); padding-left: 20px; position: relative; }
+    .acc-body ul li::before { content: attr(data-bullet); position: absolute; left: 0; font-size: 0.82rem; }
+    .acc-body ul li strong { color: var(--terracotta); }
+    .acc-body .reco-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .acc-body .reco-col h4 {
+      font-size: 0.75rem; font-weight: 700; color: var(--terracotta);
+      margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
+    }
     .signal {
       display: inline-block; padding: 2px 8px; border-radius: 20px;
       font-size: 0.68rem; font-weight: 700; margin-left: 5px; vertical-align: middle;
     }
-    .signal.ok      { background: #DCFCE7; color: #166534; }
-    .signal.alert   { background: #FEE2E2; color: #991B1B; }
-    .signal.watch   { background: #FEF3C7; color: #92400E; }
-
-    .recommandations {
-      background: var(--card-bg); border-radius: 12px; padding: 22px;
-      box-shadow: var(--shadow); border-top: 4px solid var(--gold);
-    }
-    .recommandations h3 {
-      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .7px; color: var(--text-light); margin-bottom: 16px;
-      display: flex; align-items: center; gap: 7px;
-    }
-    .reco-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-    .reco-col h4 {
-      font-size: 0.75rem; font-weight: 700; color: var(--terracotta);
-      margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
-    }
-    .reco-col ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-    .reco-col ul li { font-size: 0.81rem; line-height: 1.45; color: var(--text); padding-left: 16px; position: relative; }
-    .reco-col ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+    .signal.ok    { background: #DCFCE7; color: #166534; }
+    .signal.alert { background: #FEE2E2; color: #991B1B; }
+    .signal.watch { background: #FEF3C7; color: #92400E; }
 
     @media (max-width: 768px) {
-      .analyse-grid  { grid-template-columns: 1fr; }
-      .reco-grid     { grid-template-columns: 1fr; }
-      .analyse-intro { padding: 18px; gap: 12px; }
-      .analyse-intro h2 { font-size: 0.95rem; }
-      .analyse-card  { padding: 16px; }
-      .recommandations { padding: 16px; }
+      .acc-body .reco-grid { grid-template-columns: 1fr; gap: 14px; }
+      .synthese-banner p { font-size: 0.83rem; }
     }
 
     @media (max-width: 768px) {
@@ -355,103 +344,138 @@
   <div class="section-title">Analyse synthétique — Expert-comptable & Conseil en gestion</div>
   <div class="analyse-wrap">
 
-    <div class="analyse-intro">
-      <div class="analyse-intro-icon">📋</div>
-      <div>
-        <h2>Diagnostic global — Riad Assakina, Marrakech</h2>
-        <p>Établissement de 248 m² classé Maison d'hôtes 2ème catégorie, acquis le 23 mai 2026 pour <strong>1 300 000 €</strong>. L'analyse couvre quatre exercices (2022–2025) et intègre les données opérationnelles, la structure des charges, la performance commerciale et les risques de transition liés au changement de propriétaire.</p>
-        <div class="meta">Données source : bilans comptables DAR ASSAKINA SARL · Booking.com (100 avis, 9.7/10) · TripAdvisor (#25/927, 5/5, 772 avis)</div>
-      </div>
+    <div class="synthese-banner">
+      <div class="tag">📋 Diagnostic global · Riad Assakina · Acquisition mai 2026</div>
+      <p>Le Riad Assakina présente un profil d'acquisition <strong>solide mais exigeant</strong> : un chiffre d'affaires en forte croissance (+45 % sur quatre ans, 1 132 K MAD en 2025), un EBE redevenu positif (+134 K MAD) et un positionnement commercial exceptionnel (Booking 9.7/10, TripAdvisor #25/927 à Marrakech), pour un prix d'acquisition de <strong>1 300 000 €</strong> justifié par la valeur foncière du bien (248 m², piscine, médina historique) et le goodwill d'une réputation construite sur quinze ans. Le principal risque à court terme est la <strong>transition propriétaire</strong> — Michelle & Grant sont au cœur de l'expérience client — tandis que la masse salariale (40 % du CA) et la dépendance aux OTA (commissions estimées à 15–18 %) constituent les deux leviers d'optimisation prioritaires.</p>
     </div>
 
-    <div class="analyse-grid">
+    <div class="accordion">
 
-      <div class="analyse-card vert">
-        <h3>✅ Points forts confirmés</h3>
-        <ul>
-          <li data-bullet="▲"><strong>Croissance du CA solide :</strong> +45 % en quatre ans (597 K→1 132 K MAD). La progression 2024→2025 de +30 % est particulièrement significative et marque un tournant après deux exercices difficiles.</li>
-          <li data-bullet="▲"><strong>EBE redevenu positif en 2025 :</strong> +134 K MAD après deux années négatives. L'effet ciseau s'inverse : le CA croît plus vite que les charges fixes, ce qui est le signal classique d'une montée en régime.</li>
-          <li data-bullet="▲"><strong>Positionnement tarifaire premium validé :</strong> note Booking 9.7/10, TripAdvisor top 3 % de Marrakech. Le riad n'est pas en concurrence sur le prix mais sur la qualité d'expérience — levier de pricing fort.</li>
-          <li data-bullet="▲"><strong>Équipe stable et expérimentée :</strong> cinq CDI avec une ancienneté moyenne de 15 ans. Naoual et Hicham sont cités nommément dans les avis clients — actif immatériel majeur.</li>
-          <li data-bullet="▲"><strong>Trésorerie positive :</strong> 104 K MAD fin 2025, en progression vs 2024. L'exploitation génère du cash opérationnel (CAF +83 K MAD).</li>
-        </ul>
-      </div>
-
-      <div class="analyse-card rouge">
-        <h3>⚠️ Points de vigilance</h3>
-        <ul>
-          <li data-bullet="!"><strong>Résultat net structurellement négatif :</strong> malgré un EBE positif, le résultat net reste à −28 K MAD en 2025. Les dotations aux amortissements (111 K MAD) absorbent l'excédent — signe d'un actif immobilier récemment valorisé et amorti. <span class="signal watch">À surveiller</span></li>
-          <li data-bullet="!"><strong>Masse salariale dominante :</strong> 453 K MAD en 2025, soit 40 % du CA. C'est le premier poste de charges. Toute augmentation de salaire ou recrutement supplémentaire pèse directement sur l'EBE.</li>
-          <li data-bullet="!"><strong>Risque de transition propriétaire :</strong> Michelle & Grant sont cités dans 60 % des avis Booking. Leur départ constitue le principal risque opérationnel à court terme. La clientèle fidèle pourrait ne pas reporter sa confiance sur les nouveaux gestionnaires. <span class="signal alert">Risque élevé</span></li>
-          <li data-bullet="!"><strong>Absence de permis d'habitation :</strong> déclarée dans l'acte notarié. Situation courante dans la médina mais génère un risque juridique résiduel et peut bloquer certains travaux d'extension.</li>
-          <li data-bullet="!"><strong>Dépendance aux OTA :</strong> Booking.com et TripAdvisor génèrent l'essentiel des réservations. Les commissions (estimées à 15–18 % du CA) constituent un coût caché non isolé dans les bilans présentés.</li>
-        </ul>
-      </div>
-
-      <div class="analyse-card orange">
-        <h3>📊 Évaluation de l'acquisition à 1 300 000 €</h3>
-        <ul>
-          <li data-bullet="→"><strong>Valeur immobilière :</strong> ~990 K€ pour 248 m² avec piscine en cœur de médina, à 250 m du Palais de la Bahia. Les prix au m² dans ce secteur varient de 3 500 à 5 500 €/m² — la valorisation retenue (≈ 3 990 €/m²) est cohérente avec le marché 2025–2026.</li>
-          <li data-bullet="→"><strong>Fonds de commerce :</strong> ~310 K€ incluant marque, clientèle, comptes OTA (Booking, TripAdvisor, Airbnb, Expedia), droit au bail (3 000 DHS/mois), mobilier et équipements. Le goodwill lié aux notes exceptionnelles justifie ce niveau.</li>
-          <li data-bullet="→"><strong>Multiple EBE :</strong> prix d'acquisition / EBE 2025 = 1 300 K€ / 12,2 K€ ≈ 106x. Ce multiple est élevé mais s'explique par la nature immobilière de l'actif (le foncier ne se valorise pas en multiple d'EBE). Sur la seule valeur du fonds de commerce : 310 K€ / 12,2 K€ ≈ 25x — raisonnable pour un établissement à notes maximales.</li>
-          <li data-bullet="→"><strong>Rentabilité brute locative :</strong> CA 2025 de 1 132 K MAD ≈ 103 K€. Soit un rendement brut de ~8 % sur la valeur d'acquisition — dans la fourchette haute des riads premium de Marrakech.</li>
-        </ul>
-      </div>
-
-      <div class="analyse-card bleu">
-        <h3>🎯 Leviers de performance identifiés</h3>
-        <ul>
-          <li data-bullet="→"><strong>Tarification dynamique :</strong> l'absence de revenue management structuré est fréquente dans les petits riads. L'adoption d'un channel manager (ex. SiteMinder, Cloudbeds) et d'une stratégie de yield en haute saison (novembre–avril) peut générer +10 à +15 % de RevPAR.</li>
-          <li data-bullet="→"><strong>Réduction de la dépendance OTA :</strong> le site riadassakina.com existe mais le taux de réservation directe semble faible. Un programme de fidélisation et une campagne email post-séjour peuvent réduire les commissions de 2–3 points de CA.</li>
-          <li data-bullet="→"><strong>Diversification des revenus :</strong> le restaurant est sous-exploité. La vente de repas aux non-résidents, les cours de cuisine marocaine et les partenariats avec agences de voyage locales constituent des revenus additionnels à coût marginal faible.</li>
-          <li data-bullet="→"><strong>Optimisation des achats :</strong> 423 K MAD en 2025 (37 % du CA). Un audit fournisseurs et des achats groupés avec d'autres riads du quartier (épicerie, linges, produits d'entretien) peuvent dégager 5–8 % d'économies.</li>
-          <li data-bullet="→"><strong>Capacité d'hébergement :</strong> avec 6 chambres/suites, le taux d'occupation moyen estimé est de 65–70 %. L'objectif 80 % en pleine saison doit être piloté mensuellement avec un reporting RevPAR.</li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="recommandations">
-      <h3>🗓️ Plan d'action prioritaire</h3>
-      <div class="reco-grid">
-        <div class="reco-col">
-          <h4>Court terme · 0–3 mois</h4>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:var(--green)"></span>
+          <span class="acc-icon">✅</span>
+          <span class="acc-label">Points forts confirmés</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
           <ul>
-            <li>Organiser une période de transition avec Michelle & Grant (idéalement 4–8 semaines de présence commune)</li>
-            <li>Présenter le nouveau propriétaire aux clients fidèles via un email personnalisé</li>
-            <li>Auditer les contrats OTA et récupérer les accès administrateurs (Booking, Airbnb, Expedia, TripAdvisor)</li>
-            <li>Ouvrir un compte bancaire marocain dédié à l'exploitation du riad</li>
-            <li>Mettre en place un tableau de bord mensuel : CA, taux d'occupation, coût par chambre, note clients</li>
-          </ul>
-        </div>
-        <div class="reco-col">
-          <h4>Moyen terme · 3–12 mois</h4>
-          <ul>
-            <li>Implémenter un channel manager avec tarification dynamique par saison</li>
-            <li>Lancer une campagne de réservation directe (remise 5 % via site officiel)</li>
-            <li>Régulariser la situation des permis avec l'architecte et la commune de Marrakech</li>
-            <li>Négocier la reprise formelle de DAR ASSAKINA SARL ou créer une structure locale adaptée</li>
-            <li>Former l'équipe à la présentation du nouveau propriétaire et aux nouveaux standards de service</li>
-          </ul>
-        </div>
-        <div class="reco-col">
-          <h4>Long terme · 12–36 mois</h4>
-          <ul>
-            <li>Viser un CA de 1 400–1 600 K MAD (objectif EBE positif &gt;200 K MAD)</li>
-            <li>Développer les ventes de repas et expériences pour diversifier hors nuitées</li>
-            <li>Étudier la montée en catégorie (passage en 1ère catégorie maison d'hôtes)</li>
-            <li>Envisager un refinancement partiel pour libérer du capital à réinvestir dans la rénovation</li>
-            <li>Constituer une réserve de trésorerie de 3 mois de charges (~150 K MAD)</li>
+            <li data-bullet="▲"><strong>Croissance du CA solide :</strong> +45 % en quatre ans (597 K → 1 132 K MAD). La progression 2024→2025 de +30 % marque un tournant décisif après deux exercices difficiles.</li>
+            <li data-bullet="▲"><strong>EBE redevenu positif en 2025 :</strong> +134 K MAD après deux années négatives. L'effet ciseau s'inverse — le CA croît plus vite que les charges fixes, signal classique d'une montée en régime.</li>
+            <li data-bullet="▲"><strong>Positionnement premium validé :</strong> Booking 9.7/10, TripAdvisor top 3 % de Marrakech. Le riad ne concurrence pas sur le prix mais sur l'expérience — levier de pricing fort, insensible aux baisses de marché.</li>
+            <li data-bullet="▲"><strong>Équipe stable et expérimentée :</strong> 5 CDI, ancienneté moyenne 15 ans. Naoual et Hicham sont cités nommément dans les avis — actif immatériel majeur transféré avec le fonds de commerce.</li>
+            <li data-bullet="▲"><strong>Trésorerie positive :</strong> 104 K MAD fin 2025, CAF +83 K MAD. L'exploitation autofinance son cycle, sans recours à des découverts bancaires.</li>
           </ul>
         </div>
       </div>
-    </div>
 
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:var(--red)"></span>
+          <span class="acc-icon">⚠️</span>
+          <span class="acc-label">Points de vigilance</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li data-bullet="!"><strong>Résultat net structurellement négatif :</strong> −28 K MAD en 2025 malgré un EBE positif. Les dotations aux amortissements (111 K MAD) absorbent l'excédent — signe d'un actif valorisé et en cours d'amortissement. <span class="signal watch">À surveiller</span></li>
+            <li data-bullet="!"><strong>Masse salariale dominante :</strong> 453 K MAD, soit 40 % du CA. Premier poste de charges. Tout recrutement ou revalorisation salariale impacte directement l'EBE.</li>
+            <li data-bullet="!"><strong>Risque de transition propriétaire :</strong> Michelle & Grant sont mentionnés dans plus de 60 % des avis. Leur départ est le principal risque opérationnel. Une transition mal gérée peut dégrader la note en quelques semaines. <span class="signal alert">Risque élevé</span></li>
+            <li data-bullet="!"><strong>Absence de permis d'habitation :</strong> déclarée dans l'acte notarié. Situation courante dans la médina mais génère un risque juridique résiduel et peut bloquer certains travaux d'extension.</li>
+            <li data-bullet="!"><strong>Dépendance aux OTA :</strong> Booking et TripAdvisor génèrent l'essentiel des réservations. Les commissions (15–18 % du CA estimé) constituent un coût caché non isolé dans les bilans. <span class="signal watch">À optimiser</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#F59E0B"></span>
+          <span class="acc-icon">📊</span>
+          <span class="acc-label">Évaluation de l'acquisition à 1 300 000 €</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li data-bullet="→"><strong>Valeur immobilière (~990 K€) :</strong> 248 m² avec piscine à 250 m du Palais de la Bahia. Les prix au m² dans ce secteur varient de 3 500 à 5 500 €/m² — la valorisation retenue (≈ 3 990 €/m²) est cohérente avec le marché 2025–2026.</li>
+            <li data-bullet="→"><strong>Fonds de commerce (~310 K€) :</strong> marque, clientèle, comptes OTA (Booking, TripAdvisor, Airbnb, Expedia), droit au bail (3 000 DHS/mois), mobilier et équipements. Le goodwill lié aux notes maximales justifie ce niveau.</li>
+            <li data-bullet="→"><strong>Multiple EBE :</strong> sur le fonds seul — 310 K€ / 12,2 K€ EBE ≈ 25x. Élevé mais cohérent pour un établissement top 3 % de Marrakech avec une clientèle fidèle constituée.</li>
+            <li data-bullet="→"><strong>Rendement brut :</strong> CA 2025 ≈ 103 K€ pour 1 300 K€ investis = ~8 % brut. Dans la fourchette haute des riads premium de Marrakech (généralement 5–9 %).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#3B82F6"></span>
+          <span class="acc-icon">🎯</span>
+          <span class="acc-label">Leviers de performance identifiés</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li data-bullet="→"><strong>Tarification dynamique :</strong> l'adoption d'un channel manager (SiteMinder, Cloudbeds) et d'une stratégie de yield en haute saison (novembre–avril) peut générer +10 à +15 % de RevPAR sans investissement majeur.</li>
+            <li data-bullet="→"><strong>Réservation directe :</strong> le site riadassakina.com existe mais le taux de direct semble faible. Un programme de fidélisation et des emails post-séjour peuvent réduire les commissions OTA de 2–3 points de CA.</li>
+            <li data-bullet="→"><strong>Diversification des revenus :</strong> restaurant sous-exploité, cours de cuisine, partenariats agences locales — revenus additionnels à coût marginal quasi nul sur une infrastructure déjà financée.</li>
+            <li data-bullet="→"><strong>Optimisation des achats :</strong> 423 K MAD en 2025 (37 % du CA). Un audit fournisseurs et des achats groupés avec riads voisins peuvent dégager 5–8 % d'économies soit 20–35 K MAD/an.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:var(--gold)"></span>
+          <span class="acc-icon">🗓️</span>
+          <span class="acc-label">Plan d'action prioritaire</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <div class="reco-grid">
+            <div class="reco-col">
+              <h4>0 – 3 mois</h4>
+              <ul>
+                <li data-bullet="→">Période de transition avec Michelle & Grant (4–8 semaines ensemble)</li>
+                <li data-bullet="→">Email personnalisé aux clients fidèles pour présenter le nouveau propriétaire</li>
+                <li data-bullet="→">Récupérer tous les accès admin OTA (Booking, Airbnb, Expedia, TripAdvisor)</li>
+                <li data-bullet="→">Ouvrir un compte bancaire marocain dédié à l'exploitation</li>
+                <li data-bullet="→">Mettre en place un reporting mensuel : CA, taux d'occupation, note clients</li>
+              </ul>
+            </div>
+            <div class="reco-col">
+              <h4>3 – 12 mois</h4>
+              <ul>
+                <li data-bullet="→">Implémenter un channel manager avec tarification dynamique par saison</li>
+                <li data-bullet="→">Lancer une offre de réservation directe (−5 % via site officiel)</li>
+                <li data-bullet="→">Régulariser la situation des permis auprès de la commune de Marrakech</li>
+                <li data-bullet="→">Structurer la reprise de DAR ASSAKINA SARL ou créer une société locale</li>
+                <li data-bullet="→">Audit fournisseurs et renégociation des contrats clés</li>
+              </ul>
+            </div>
+            <div class="reco-col">
+              <h4>12 – 36 mois</h4>
+              <ul>
+                <li data-bullet="→">Objectif CA 1 400–1 600 K MAD avec EBE &gt; 200 K MAD</li>
+                <li data-bullet="→">Développer repas, expériences et cours de cuisine pour diversifier</li>
+                <li data-bullet="→">Étudier la montée en 1ère catégorie maison d'hôtes</li>
+                <li data-bullet="→">Constituer une réserve de trésorerie de 3 mois de charges (~150 K MAD)</li>
+                <li data-bullet="→">Envisager un refinancement partiel pour financer une rénovation ciblée</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
 </main>
 
 <script>
+// ── Accordéon
+function toggleAcc(btn) {
+  const item = btn.closest('.acc-item');
+  item.classList.toggle('open');
+}
+
 // ── Auth
 const PWD_HASH = 'c9553bef0966b272a080335ccf08c6e43dc53944ae682b7945206910e15b57dc'; // SHA-256 de "Assakina"
 async function checkPwd() {
