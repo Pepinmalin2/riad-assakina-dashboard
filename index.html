@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riad Assakina — Dashboard de Gestion</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── LOGIN SCREEN */
+    #login-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(135deg, #3D1A08 0%, #6B3010 50%, #8B4513 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #login-screen.hidden { display: none; }
+    .login-box {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(201,162,39,0.3);
+      border-radius: 20px; padding: 48px 40px;
+      width: 360px; max-width: 92vw;
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+    .login-logo {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #C9A227; margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 800; color: #6B3010;
+    }
+    .login-box h1 { color: white; font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    .login-box p  { color: rgba(255,255,255,0.55); font-size: 0.82rem; margin-bottom: 32px; }
+    .login-box input {
+      width: 100%; padding: 13px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 10px; color: white;
+      font-size: 1rem; text-align: center; letter-spacing: 3px;
+      outline: none; margin-bottom: 14px;
+      transition: border-color .2s;
+    }
+    .login-box input::placeholder { letter-spacing: 1px; color: rgba(255,255,255,0.35); }
+    .login-box input:focus { border-color: #C9A227; }
+    .login-btn {
+      width: 100%; padding: 13px;
+      background: #C9A227; color: #3D1A08;
+      border: none; border-radius: 10px;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: background .2s;
+    }
+    .login-btn:hover { background: #E8C547; }
+    .login-error { color: #FCA5A5; font-size: 0.8rem; margin-top: 10px; min-height: 18px; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --terracotta: #8B4513;
+      --terracotta-light: #A0522D;
+      --gold: #C9A227;
+      --bg: #FBF7F2;
+      --card-bg: #FFFFFF;
+      --text: #2C1810;
+      --text-light: #6B4C3B;
+      --border: #E8D5C4;
+      --green: #16A34A;
+      --red: #DC2626;
+      --shadow: 0 2px 12px rgba(139,69,19,0.10);
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    header {
+      background: linear-gradient(135deg, var(--terracotta) 0%, #6B3010 100%);
+      color: white; padding: 0 32px;
+      display: flex; align-items: center; gap: 20px;
+      height: 68px; box-shadow: 0 3px 16px rgba(139,69,19,0.25);
+    }
+    .logo-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: var(--terracotta); flex-shrink: 0;
+    }
+    header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: .5px; }
+    header p  { font-size: 0.78rem; opacity: .75; }
+    .header-date { margin-left: auto; font-size: 0.82rem; opacity: .8; text-align: right; }
+
+    main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .kpi-card {
+      background: var(--card-bg); border-radius: 12px; padding: 20px;
+      box-shadow: var(--shadow); border-left: 4px solid var(--gold);
+      position: relative; cursor: help; transition: box-shadow .2s;
+    }
+    .kpi-card:hover { box-shadow: 0 4px 20px rgba(139,69,19,0.18); }
+    .kpi-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: .8px; color: var(--text-light); margin-bottom: 8px; }
+    .kpi-card .value { font-size: 1.5rem; font-weight: 700; color: var(--terracotta); }
+    .kpi-card .sub   { font-size: 0.78rem; color: var(--text-light); margin-top: 4px; }
+    .kpi-card .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; margin-top: 6px; }
+    .kpi-card .info-icon {
+      position: absolute; top: 12px; right: 12px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--border); color: var(--text-light);
+      font-size: 0.7rem; font-weight: 700; font-style: normal;
+      display: flex; align-items: center; justify-content: center;
+      user-select: none;
+    }
+
+    /* TOOLTIP */
+    .tooltip-box {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      background: #2C1810;
+      color: #FBF7F2;
+      border-radius: 10px;
+      padding: 12px 16px;
+      max-width: 280px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      pointer-events: none;
+    }
+    .tooltip-box strong { color: var(--gold); display: block; margin-bottom: 5px; font-size: 0.85rem; }
+    .tooltip-box .formula { font-size: 0.75rem; color: #C9A22799; margin-top: 6px; font-style: italic; }
+    .badge.up      { background: #DCFCE7; color: #166534; }
+    .badge.down    { background: #FEE2E2; color: #991B1B; }
+    .badge.neutral { background: #FEF3C7; color: #92400E; }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    .chart-card { background: var(--card-bg); border-radius: 12px; padding: 22px; box-shadow: var(--shadow); }
+    .chart-card h3 { font-size: 0.88rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 16px; }
+    .chart-card canvas { max-height: 230px; }
+
+    .section-title {
+      font-size: 1rem; font-weight: 700; color: var(--terracotta);
+      margin: 0 0 16px 0; display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .table-wrap { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 28px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead tr { background: var(--terracotta); color: white; }
+    thead th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .5px; }
+    tbody tr:nth-child(even) { background: #FAF5F0; }
+    tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); }
+    .positive { color: var(--green); font-weight: 600; }
+    .negative { color: var(--red); font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ÉCRAN DE CONNEXION -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">RA</div>
+    <h1>Riad Assakina</h1>
+    <p>Dashboard de gestion — accès privé</p>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
+    <button class="login-btn" onclick="checkPwd()">Accéder →</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<header>
+  <div class="logo-circle">RA</div>
+  <div>
+    <h1>Riad Assakina</h1>
+    <p>14 Derb Alaati Allah — Médina de Marrakech</p>
+  </div>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<main>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Chiffre d'affaires (MAD)</h3>
+      <canvas id="chartCA"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Structure des charges 2025</h3>
+      <canvas id="chartCharges"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Valeur ajoutée (MAD)</h3>
+      <canvas id="chartVA"></canvas>
+    </div>
+  </div>
+
+  <div class="section-title">Tableau de synthèse financière</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Indicateur</th>
+          <th>2022</th>
+          <th>2023</th>
+          <th>2024</th>
+          <th>2025</th>
+          <th>Évol. 24→25</th>
+        </tr>
+      </thead>
+      <tbody id="finTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Salariés transférés (5 CDI)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Poste</th><th>CDI depuis</th><th>Ancienneté</th><th>Salaire net / mois</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mariem MOUAHID</td><td>Employée</td><td>07/01/2008</td><td>~17 ans</td><td>5 524 DHS</td></tr>
+        <tr><td>Naoual MOUAHID</td><td>Réceptionniste / Accueil</td><td>01/01/2008</td><td>~17 ans</td><td>8 313 DHS</td></tr>
+        <tr><td>Abdelhakim KNIDI</td><td>Employé</td><td>01/09/2012</td><td>~13 ans</td><td>4 710 DHS</td></tr>
+        <tr><td>Hicham EL HADAJI</td><td>Employé</td><td>01/10/2009</td><td>~16 ans</td><td>5 877 DHS</td></tr>
+        <tr><td>Ibtissam HATIM</td><td>Employée</td><td>01/02/2015</td><td>~11 ans</td><td>3 300 DHS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+// ── Auth
+const PWD_HASH = '4fd8732fe32e7c7618d7a60938720bf87e10fb01f9c5432e0bb6ca0c81699d44'; // SHA-256 de "Assakina"
+async function checkPwd() {
+  const val = document.getElementById('pwd-input').value;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
+  const hash = Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if (hash === PWD_HASH) {
+    sessionStorage.setItem('ra_auth', '1');
+    document.getElementById('login-screen').classList.add('hidden');
+  } else {
+    document.getElementById('login-error').textContent = 'Mot de passe incorrect';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+if (sessionStorage.getItem('ra_auth') === '1') {
+  document.getElementById('login-screen').classList.add('hidden');
+}
+
+const FINANCIAL = {
+  years: ['2022', '2023', '2024', '2025'],
+  ca:          [596875, 781101, 872435, 1131729],
+  ebe:         [63462, -34205, -47923, 134486],
+  resultatNet: [-81062, -58771, -235355, -27791],
+  caf:         [27397, 51573, -125860, 83064],
+  tresorerie:  [310013, 64341, 58070, 104110],
+  va:          [303475, 407571, 425199, 615458],
+  charges2025: {
+    labels: ['Achats & matières', 'Charges externes', 'Personnel', 'Impôts & taxes', 'Autres charges', 'Dotations amort.'],
+    values: [422941, 93330, 453184, 27787, 40725, 110855],
+    colors: ['#8B4513','#C9A227','#DC2626','#3B82F6','#8B5CF6','#6B7280']
+  }
+};
+
+// ── Définitions des indicateurs
+const DEFINITIONS = {
+  "CA 2025":          { title: "Chiffre d'affaires", desc: "Total des ventes encaissées sur l'année : nuitées, repas, services. C'est le point de départ de toute analyse — il ne dit rien sur la rentabilité.", formula: "CA = somme de toutes les recettes" },
+  "EBE 2025":         { title: "EBE — Excédent Brut d'Exploitation", desc: "Cash généré par l'activité courante, avant remboursement de dettes, impôts et amortissements. C'est le vrai indicateur de rentabilité opérationnelle du riad.", formula: "EBE = CA − Achats − Charges ext. − Personnel − Impôts locaux" },
+  "CAF 2025":         { title: "CAF — Capacité d'Autofinancement", desc: "Ressources internes disponibles pour investir ou rembourser. Différent du BFR : la CAF mesure ce que l'activité produit comme cash sur la période.", formula: "CAF = Résultat net + Dotations aux amortissements" },
+  "Trésorerie":       { title: "Trésorerie nette", desc: "Argent disponible en banque à la clôture de l'exercice. Indicateur de survie à court terme : si elle passe sous zéro, le riad ne peut plus payer ses charges.", formula: "Trésorerie = Disponibilités − Découverts bancaires" },
+  "Valeur ajoutée":   { title: "Valeur ajoutée (VA)", desc: "Richesse créée par le riad après déduction des achats et charges externes. Elle sert à payer le personnel, les impôts, les amortissements et à dégager un bénéfice.", formula: "VA = CA − Achats consommés − Charges externes" },
+  "Note Booking":     { title: "Note Booking.com", desc: "Score moyen calculé par Booking.com sur 6 critères : personnel, équipements, propreté, confort, rapport qualité/prix, situation géographique. 9.7 = top 1% mondial.", formula: "Personnel 9.9 · Propreté 9.8 · Confort 9.8 · Équipements 9.7" },
+  "Note TripAdvisor": { title: "Note TripAdvisor", desc: "Note maximale 5/5 sur 772 avis. Classement #25 sur 927 hôtels à Marrakech — top 3% de la ville. Construit sur 15+ ans par Michelle & Grant.", formula: "#25 / 927 hôtels · 772 avis · 5 bulles" },
+  "Prix acquisition": { title: "Prix d'acquisition total", desc: "1 300 000 € répartis en deux actes notariés signés simultanément : vente immobilière (248 m², TF 50.512/43) + cession du fonds de commerce (marque, clientèle, listings OTA, mobilier, 5 CDI).", formula: "≈ 990 K€ immobilier + 310 K€ fonds de commerce" },
+};
+
+// ── KPIs
+function renderKPIs() {
+  const f = FINANCIAL;
+  const ca25 = f.ca[3], ca24 = f.ca[2];
+  const evCA = (((ca25/ca24)-1)*100).toFixed(1);
+  const kpis = [
+    { label: "CA 2025",          value: (ca25/1000).toFixed(0) + ' K MAD',  sub: '≈ ' + (ca25/11000).toFixed(0) + ' K EUR',   badge: 'up',      badgeTxt: '▲ ' + evCA + '% vs 2024' },
+    { label: "EBE 2025",         value: (f.ebe[3]/1000).toFixed(0) + ' K MAD', sub: '11.9 % du CA',                             badge: 'up',      badgeTxt: '▲ Retour positif' },
+    { label: "CAF 2025",         value: (f.caf[3]/1000).toFixed(0) + ' K MAD', sub: 'Capacité autofinancement',                 badge: 'up',      badgeTxt: '▲ vs 2024' },
+    { label: "Trésorerie",       value: (f.tresorerie[3]/1000).toFixed(0) + ' K MAD', sub: 'Fin 2025',                         badge: 'neutral', badgeTxt: '≈ ' + (f.tresorerie[3]/11000).toFixed(0) + ' K EUR' },
+    { label: "Valeur ajoutée",   value: (f.va[3]/1000).toFixed(0) + ' K MAD',  sub: '2025',                                    badge: 'up',      badgeTxt: '▲ +44.8 % vs 2024' },
+    { label: "Note Booking",     value: '9.7 / 10',  sub: 'Exceptionnel · 100 avis',                                           badge: 'up',      badgeTxt: 'Personnel 9.9' },
+    { label: "Note TripAdvisor", value: '5 / 5 ★',  sub: '#25 / 927 hôtels Marrakech · 772 avis',                              badge: 'up',      badgeTxt: 'Excellent' },
+    { label: "Prix acquisition", value: '1 300 K€',  sub: 'Immeuble + Fonds de commerce',                                      badge: 'neutral', badgeTxt: '248 m² + piscine' },
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
+    <div class="kpi-card" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()" ontouchstart="toggleTip(event,this)">
+      <i class="info-icon">i</i>
+      <div class="label">${k.label}</div>
+      <div class="value">${k.value}</div>
+      <div class="sub">${k.sub}</div>
+      <span class="badge ${k.badge}">${k.badgeTxt}</span>
+    </div>`).join('');
+}
+
+// ── Tooltip logic
+const tip = document.createElement('div');
+tip.className = 'tooltip-box';
+document.body.appendChild(tip);
+
+function showTip(e, card) {
+  const def = DEFINITIONS[card.dataset.key];
+  if (!def) return;
+  tip.innerHTML = `<strong>${def.title}</strong>${def.desc}<div class="formula">${def.formula}</div>`;
+  tip.style.display = 'block';
+  positionTip(e);
+}
+function positionTip(e) {
+  const x = e.clientX ?? (e.touches?.[0]?.clientX ?? 0);
+  const y = e.clientY ?? (e.touches?.[0]?.clientY ?? 0);
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  tip.style.left = (x + 16 + tw > vw ? x - tw - 8 : x + 16) + 'px';
+  tip.style.top  = (y + 16 + th > vh ? y - th - 8 : y + 16) + 'px';
+}
+function hideTip() { tip.style.display = 'none'; }
+function toggleTip(e, card) {
+  e.preventDefault();
+  if (tip.style.display === 'block' && tip._card === card) { hideTip(); tip._card = null; return; }
+  tip._card = card;
+  showTip(e, card);
+}
+document.addEventListener('mousemove', e => { if (tip.style.display === 'block' && !tip._card) positionTip(e); });
+document.addEventListener('touchstart', e => { if (tip.style.display === 'block' && !e.target.closest('.kpi-card')) hideTip(); }, { passive: true });
+
+// ── Tableau financier
+function renderFinTable() {
+  const rows = [
+    { name: "Chiffre d'affaires", key: 'ca' },
+    { name: "EBE",               key: 'ebe' },
+    { name: "Résultat net",      key: 'resultatNet' },
+    { name: "CAF",               key: 'caf' },
+    { name: "Trésorerie",        key: 'tresorerie' },
+    { name: "Valeur ajoutée",    key: 'va' },
+  ];
+  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
+  const cls  = n => n >= 0 ? 'positive' : 'negative';
+  const evol = (a, b) => {
+    if (!a) return '—';
+    const p = (((b/a)-1)*100).toFixed(1);
+    return `<span class="${b>=a?'positive':'negative'}">${b>=a?'▲':'▼'} ${Math.abs(p)}%</span>`;
+  };
+  const f = FINANCIAL;
+  document.getElementById('finTableBody').innerHTML = rows.map(r => `
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      ${f.years.map((_,i) => `<td class="${cls(f[r.key][i])}">${fmt(f[r.key][i])}</td>`).join('')}
+      <td>${evol(f[r.key][2], f[r.key][3])}</td>
+    </tr>`).join('');
+}
+
+// ── Graphiques
+function initCharts() {
+  const f = FINANCIAL;
+  const T = '#8B4513', G = '#C9A227';
+
+  new Chart(document.getElementById('chartCA'), {
+    type: 'bar',
+    data: { labels: f.years, datasets: [{ label: 'CA (MAD)', data: f.ca, backgroundColor: [T+'80',T+'80',T+'80',T], borderColor: T, borderWidth: 2, borderRadius: 6 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
+  });
+
+
+  new Chart(document.getElementById('chartCharges'), {
+    type: 'doughnut',
+    data: { labels: f.charges2025.labels, datasets: [{ data: f.charges2025.values, backgroundColor: f.charges2025.colors, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }, cutout: '60%' }
+  });
+
+  new Chart(document.getElementById('chartVA'), {
+    type: 'bar',
+    data: { labels: f.years, datasets: [{ label: 'Valeur ajoutée (MAD)', data: f.va, backgroundColor: [G+'60',G+'60',G+'60',G], borderColor: G, borderWidth: 2, borderRadius: 6 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
+  });
+}
+
+// ── Init
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+renderKPIs();
+renderFinTable();
+initCharts();
+</script>
+</body>
+</html>
