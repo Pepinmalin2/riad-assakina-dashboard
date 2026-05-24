@@ -554,22 +554,56 @@ const tip = document.createElement('div');
 tip.className = 'tooltip-box';
 document.body.appendChild(tip);
 
-function showTip(e, card) {
+function showTip(e, card, isTouch) {
   const def = DEFINITIONS[card.dataset.key];
   if (!def) return;
   tip.innerHTML = `<strong>${def.title}</strong>${def.desc}<div class="formula">${def.formula}</div>`;
   tip.style.display = 'block';
-  positionTip(e);
+  if (isTouch) positionTipTouch(card);
+  else positionTip(e);
 }
+
+// Desktop : suit le curseur
 function positionTip(e) {
-  const x = e.clientX ?? (e.touches?.[0]?.clientX ?? 0);
-  const y = e.clientY ?? (e.touches?.[0]?.clientY ?? 0);
+  const x = e.clientX, y = e.clientY;
   const tw = tip.offsetWidth, th = tip.offsetHeight;
   const vw = window.innerWidth, vh = window.innerHeight;
-  tip.style.left = (x + 16 + tw > vw ? x - tw - 8 : x + 16) + 'px';
-  tip.style.top  = (y + 16 + th > vh ? y - th - 8 : y + 16) + 'px';
+  const margin = 10;
+  let left = x + 16;
+  let top  = y + 16;
+  if (left + tw > vw - margin) left = x - tw - 8;
+  if (left < margin) left = margin;
+  if (top + th > vh - margin) top = y - th - 8;
+  if (top < margin) top = margin;
+  tip.style.left = left + 'px';
+  tip.style.top  = top  + 'px';
 }
-function hideTip() { tip.style.display = 'none'; }
+
+// Mobile : centré horizontalement, au-dessus ou en-dessous de la carte
+function positionTipTouch(card) {
+  const vw  = window.innerWidth;
+  const margin = 12;
+  const tw  = Math.min(tip.offsetWidth, vw - margin * 2);
+  tip.style.width = tw + 'px';
+  const th  = tip.offsetHeight;
+  const rect = card.getBoundingClientRect();
+  // centré horizontalement dans la viewport
+  const left = Math.max(margin, (vw - tw) / 2);
+  tip.style.left = left + 'px';
+  // en dessous de la carte si possible, sinon au-dessus
+  const spaceBelow = window.innerHeight - rect.bottom - margin;
+  const spaceAbove = rect.top - margin;
+  if (spaceBelow >= th || spaceBelow >= spaceAbove) {
+    tip.style.top = (rect.bottom + window.scrollY + 8) + 'px';
+  } else {
+    tip.style.top = (rect.top + window.scrollY - th - 8) + 'px';
+  }
+}
+
+function hideTip() {
+  tip.style.display = 'none';
+  tip.style.width = '';
+}
 
 // Souris
 document.addEventListener('mousemove', e => { if (tip.style.display === 'block') positionTip(e); });
@@ -582,7 +616,7 @@ document.addEventListener('touchstart', e => {
   const touch = e.touches[0];
   _longTimer = setTimeout(() => {
     if (navigator.vibrate) navigator.vibrate(30);
-    showTip({ clientX: touch.clientX, clientY: touch.clientY }, card);
+    showTip(null, card, true);
     _longTimer = null;
   }, 500);
 }, { passive: true });
