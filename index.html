@@ -262,7 +262,7 @@
     .signal.watch { background: #FEF3C7; color: #92400E; }
 
     /* ── ONGLET GÉNÉRAL — thème vert portfolio */
-    .prop-banner-gen { background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border-left-color: #059669; }
+    .prop-banner-gen { border-left-color: #059669; }
     .prop-tag-gen { color: #065F46; }
     .prop-badge-gen { background: #D1FAE5; color: #065F46; }
     .section-title-gen { color: #059669; }
@@ -1090,6 +1090,7 @@ const DEFINITIONS = {
   "Note Airbnb DN":   { title: "Note Airbnb — Dar Num", desc: "Note parfaite 5.0/5 sur 98 avis accumulés. Capital réputationnel exceptionnel — l'algorithme Airbnb favorise ces profils. À préserver impérativement après transfert de compte.", formula: "5.0/5 · 98 avis · Listing : Riad privatisé de 320m2 - piscine chauffée" },
   "Tarif de base DN": { title: "Tarif de base Airbnb — Dar Num", desc: "Tarif pour 2 personnes en basse saison, bien entier en privatisation complète. +20 €/nuit par personne supplémentaire. En haute saison (nov.–avril) : surcoût de +30 à +50 % applicable.", formula: "2 pers. : 450 €/nuit · 9 pers. : ~590 €/nuit · Min. 2 nuits" },
   "Prix acq. DN":     { title: "Prix d'acquisition — Dar Num", desc: "Acte notarié du 4 sept. 2025 — 10 307 600 MAD immobilier + 1 000 000 MAD mobilier inclus. All-in avec frais notariaux : 12 011 218 MAD ≈ 1 092 K€.", formula: "≈ 937 K€ immobilier + 91 K€ mobilier = 1 028 K€ + 64 K€ frais" },
+  "VA consolidée":    { title: "Valeur ajoutée consolidée IH NUM", desc: "Richesse créée par l'ensemble du portefeuille après déduction des achats et charges externes. Assakina contribue à hauteur de 615 K MAD, Dar Num 57 K MAD (estimé hors charges d'acquisition).", formula: "Assakina 615 K + Dar Num 57 K = 672 K MAD (~61 K€)" },
   "CA consolidé":     { title: "CA consolidé IH NUM 2025", desc: "Chiffre d'affaires combiné des deux propriétés. Dar Num représente seulement 4 mois (sept.–déc. 2025) ; le rythme annualisé du portefeuille est de ~2 330 K MAD.", formula: "Assakina 1 132 K + Dar Num 401 K = 1 533 K MAD" },
   "EBE consolidé":    { title: "EBE consolidé — Excédent Brut d'Exploitation", desc: "Le portefeuille génère un EBE positif dès la première année combinée. Assakina (+134 K MAD) absorbe le quasi-nul de Dar Num (−8 K MAD).", formula: "Assakina +134 K + Dar Num −8 K = +126 K MAD" },
   "CAF consolidée":   { title: "CAF consolidée — Capacité d'Autofinancement", desc: "Négative en raison des charges financières exceptionnelles du compte d'associés de Dar Num (414 K MAD). Redeviendra positive dès 2026 avec la pleine activité de DN.", formula: "Assakina +83 K + Dar Num −422 K = −339 K MAD" },
@@ -1305,6 +1306,7 @@ function renderKPIsGen() {
   const kpis = [
     { label: "CA consolidé",   value: '~' + Math.round(g.caConsolide/11000) + ' K€',         sub: '≈ ' + Math.round(g.caConsolide/1000) + ' K MAD · dont DN 4 mois',   badge: 'up',      badgeTxt: '▲ Assakina 74 % · DN 26 %',  cls: 'kpi-card-gen' },
     { label: "EBE consolidé",  value: '+~' + Math.round(g.ebeConsolide/11000) + ' K€',       sub: '≈ +' + Math.round(g.ebeConsolide/1000) + ' K MAD · positif an 1 !', badge: 'up',      badgeTxt: '▲ Assakina compense DN',     cls: 'kpi-card-gen' },
+    { label: "VA consolidée",  value: '~' + Math.round(g.vaConsolide/11000) + ' K€',         sub: '≈ ' + Math.round(g.vaConsolide/1000) + ' K MAD · richesse créée',    badge: 'up',      badgeTxt: '▲ Dont 615 K Assakina',      cls: 'kpi-card-gen' },
     { label: "Tréso. totale",  value: '~' + Math.round(g.tresoConsolide/11000) + ' K€',      sub: '≈ ' + Math.round(g.tresoConsolide/1000) + ' K MAD · 31/12/2025',    badge: 'up',      badgeTxt: '✓ ~4 mois de charges',       cls: 'kpi-card-gen' },
     { label: "Capital investi",value: g.investTotal + ' K€',                                   sub: '2 riads · Médina de Marrakech',                                       badge: 'neutral', badgeTxt: 'Actif bilan ~26 M MAD',      cls: 'kpi-card-gen' },
     { label: "Rendement brut", value: '~8,9 %',                                                sub: 'CA annualisé / capital investi · cible 2027',                         badge: 'up',      badgeTxt: '▲ Fourchette haute marché',  cls: 'kpi-card-gen' },
