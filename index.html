@@ -261,6 +261,28 @@
     .signal.alert { background: #FEE2E2; color: #991B1B; }
     .signal.watch { background: #FEF3C7; color: #92400E; }
 
+    /* ── ONGLET GÉNÉRAL — thème vert portfolio */
+    .prop-banner-gen { background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border-left-color: #059669; }
+    .prop-tag-gen { color: #065F46; }
+    .prop-badge-gen { background: #D1FAE5; color: #065F46; }
+    .section-title-gen { color: #059669; }
+    .section-title-gen::after { background: #A7F3D0; }
+    .kpi-card-gen { border-left-color: #059669; }
+    .kpi-card-gen .value { color: #065F46; }
+    .kpi-card-gen:hover { box-shadow: 0 4px 20px rgba(5,150,105,0.18); }
+    .tab-btn-gen.active { color: #059669; border-bottom-color: #059669; }
+    .tab-btn:hover { color: var(--terracotta); }
+    .tab-btn.tab-btn-gen:hover { color: #059669; }
+    .tab-btn.tab-btn-gen.active { color: #059669; border-bottom-color: #059669; }
+    thead tr.gen-head { background: #059669; }
+    .synthese-banner-gen { background: linear-gradient(135deg, #065F46 0%, #047857 100%); }
+    .synthese-banner-gen .tag { color: #6EE7B7; }
+    .synthese-banner-gen p strong { color: #6EE7B7; }
+    .acc-body ul li.gen-li strong { color: #059669; }
+    .acc-body .reco-col.gen-col h4 { color: #059669; border-bottom-color: #A7F3D0; }
+    .comp-win { color: var(--green); font-weight: 600; }
+    .comp-eq  { color: var(--text-light); }
+
     @media (max-width: 768px) {
       .acc-body .reco-grid { grid-template-columns: 1fr; gap: 14px; }
       .synthese-banner p { font-size: 0.83rem; }
@@ -327,6 +349,7 @@
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('assakina', this)">🏠 Riad Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
+    <button class="tab-btn tab-btn-gen" onclick="switchTab('general', this)">📊 Général</button>
   </div>
 </div>
 
@@ -783,6 +806,202 @@
 
 </div><!-- /tab-darnum -->
 
+
+<!-- ═══════════════════════════════════════════ ONGLET 3 : GÉNÉRAL -->
+<div id="tab-general" class="tab-content">
+
+  <div class="prop-banner prop-banner-gen">
+    <div>
+      <span class="prop-tag prop-tag-gen">IH NUM — Portefeuille</span>
+      <span class="prop-detail">2 riads · Médina de Marrakech · Investi total ~2 392 K€ · Philippe MOYAL / M-CORP</span>
+    </div>
+    <span class="prop-badge prop-badge-gen">Vue consolidée 2025</span>
+  </div>
+
+  <div class="kpi-grid" id="kpiGridGen"></div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>CA comparatif — Assakina vs Dar Num (MAD)</h3>
+      <canvas id="chartGenCA"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Répartition de l'investissement total (~2 392 K€)</h3>
+      <canvas id="chartGenInvest"></canvas>
+    </div>
+  </div>
+
+  <div class="section-title section-title-gen">Comparatif des deux propriétés</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="gen-head"><th>Critère</th><th>Riad Assakina</th><th>Dar Num</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Modèle commercial</strong></td><td>Maison d'hôtes · location à la chambre</td><td>Airbnb · privatisation complète</td></tr>
+        <tr><td><strong>Adresse</strong></td><td>14 Derb Alaati Allah · Médina</td><td>21 Rue Tikhizrit · Médina</td></tr>
+        <tr><td><strong>Surface</strong></td><td>248 m²</td><td class="comp-win">320 m² habitables</td></tr>
+        <tr><td><strong>Capacité</strong></td><td>Chambres indépendantes</td><td>4 suites · 9 adultes max</td></tr>
+        <tr><td><strong>Piscine</strong></td><td class="comp-win">Oui</td><td class="comp-win">Oui (chauffée UV)</td></tr>
+        <tr><td><strong>Accès voiture</strong></td><td>Non</td><td class="comp-win">Oui · parking 30 m</td></tr>
+        <tr><td><strong>Équipe</strong></td><td class="comp-win">5 CDI · ancienneté moy. 15 ans</td><td>2 en poste · 1 à recruter</td></tr>
+        <tr><td><strong>Note plateforme</strong></td><td class="comp-win">Booking 9.7/10 · TripAdvisor 5/5</td><td class="comp-win">Airbnb 5.0/5 · 98 avis ★</td></tr>
+        <tr><td><strong>CA 2025</strong></td><td class="comp-win">1 132 K MAD (≈ 103 K€)</td><td>401 K MAD / 4 mois (≈ 36 K€)</td></tr>
+        <tr><td><strong>EBE 2025</strong></td><td class="comp-win">+134 K MAD</td><td>≈ −8 K MAD (quasi-nul)</td></tr>
+        <tr><td><strong>Prix acquisition</strong></td><td>~1 300 K€</td><td class="comp-win">~1 028 K€ + 64 K€ frais</td></tr>
+        <tr><td><strong>Permis d'habiter</strong></td><td style="color:var(--red)">Non</td><td style="color:var(--red)">Non</td></tr>
+        <tr><td><strong>Date d'acquisition</strong></td><td>Mai 2026</td><td>4 septembre 2025</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title section-title-gen">Synthèse financière consolidée IH NUM — 2025</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="gen-head"><th>Indicateur</th><th>Riad Assakina</th><th>Dar Num</th><th>Total consolidé</th><th>Note</th></tr>
+      </thead>
+      <tbody id="finTableBodyGen"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title section-title-gen">Analyse stratégique — IH NUM · Vision 2026–2028</div>
+  <div class="analyse-wrap">
+
+    <div class="synthese-banner synthese-banner-gen">
+      <div class="tag">📋 Diagnostic global · Portefeuille IH NUM · 2 riads · Médina de Marrakech</div>
+      <p>IH NUM — holding marocaine détenue par M-CORP (Philippe MOYAL) — gère un portefeuille de <strong>deux riads complémentaires en médina de Marrakech</strong>, représentant un investissement total de ~2 392 K€ et un potentiel de CA consolidé de <strong>2 400–2 600 K MAD/an (~220 K€)</strong> en régime de croisière. Les modèles sont délibérément différents : Assakina (maison d'hôtes, flux réguliers, équipe de 5 CDI, CA en croissance continue) et Dar Num (Airbnb privatisation, tickets élevés, note parfaite 5.0/5, rythme annualisé ~1 200 K MAD). La priorité 2026 est double — <strong>sécuriser la transition d'Assakina</strong> (départ de Michelle &amp; Grant) et <strong>activer le plein potentiel de Dar Num</strong> (transfert compte Airbnb, recrutement post-Naima). À horizon 2027–2028, un EBE consolidé de 600–700 K MAD (~55–65 K€) est atteignable, générant un rendement net de 4–5 % sur le capital investi — cohérent avec un portefeuille immobilier-hôtelier premium.</p>
+    </div>
+
+    <div class="accordion">
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#059669"></span>
+          <span class="acc-icon">📊</span>
+          <span class="acc-label">Performance consolidée du portefeuille</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="gen-li" data-bullet="→"><strong>CA consolidé 2025 :</strong> 1 533 K MAD (103 K€) — dont 74 % Assakina / 26 % Dar Num (4 mois seulement). Assakina porte le portefeuille pendant que Dar Num monte en puissance.</li>
+            <li class="gen-li" data-bullet="→"><strong>EBE consolidé 2025 :</strong> +126 K MAD. Assakina (+134 K) compense le déficit opérationnel quasi-nul de Dar Num (−8 K). Le portefeuille génère un excédent opérationnel positif dès la première année.</li>
+            <li class="gen-li" data-bullet="→"><strong>Trésorerie totale :</strong> 1 144 K MAD (≈ 104 K€) — coussin de sécurité solide représentant ~4 mois de charges d'exploitation des deux propriétés combinées.</li>
+            <li class="gen-li" data-bullet="→"><strong>CA prospectif 2027 (stabilisé) :</strong> ~2 430 K MAD (Assakina 1 400 K + Dar Num 1 030 K). Rendement brut sur capital investi : ~9 %. EBE cible : 600–700 K MAD (~55–65 K€).</li>
+            <li class="gen-li" data-bullet="→"><strong>Investissement total all-in :</strong> ~2 392 K€ (Assakina 1 300 K€ + Dar Num 1 028 K€ + frais notariaux 64 K€). Actif immobilier estimé à ~26 M MAD — patrimoine foncier solide en zone touristique prime.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#6366F1"></span>
+          <span class="acc-icon">🏛</span>
+          <span class="acc-label">Structure juridique &amp; optimisation fiscale IH NUM</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="gen-li" data-bullet="!"><strong>Refinancer le compte d'associés :</strong> les 13 696 K MAD apportés par M-CORP via compte d'associés génèrent 413 K MAD de charges financières en 2025 sur Dar Num seul. Étudier un crédit hypothécaire marocain auprès de CIH Bank ou Attijariwafa (taux 5–6 %) permettrait de réduire ce coût de 30–40 %. <span class="signal alert">Priorité haute</span></li>
+            <li class="gen-li" data-bullet="→"><strong>Bouclier fiscal amortissements :</strong> les dotations combinées (Assakina 111 K + Dar Num 280 K = 391 K MAD/an) constituent un bouclier fiscal significatif. S'assurer que les plans d'amortissement sont optimisés (durées, méthodes) avec le comptable marocain.</li>
+            <li class="gen-li" data-bullet="→"><strong>Convention de management M-CORP / IH NUM :</strong> structurer une convention de services de gestion (management fees) de M-CORP vers IH NUM permet d'optimiser la remontée de trésorerie vers la France tout en justifiant les charges côté marocain.</li>
+            <li class="gen-li" data-bullet="→"><strong>IS Maroc progressif :</strong> 17,5 % jusqu'à 300 K MAD de bénéfice net, 31 % au-delà. Tant que les deux propriétés génèrent des pertes nettes (via amortissements), l'IS reste nul — profil fiscal favorable les 3–5 premières années.</li>
+            <li class="gen-li" data-bullet="→"><strong>Assemblée générale consolidée :</strong> tenir une AG annuelle IH NUM formalisant la gestion des deux propriétés, approuvant les comptes et documentant la stratégie d'investissement — essentiel pour la gouvernance et la traçabilité vis-à-vis de M-CORP.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#F59E0B"></span>
+          <span class="acc-icon">🔗</span>
+          <span class="acc-label">Synergies &amp; économies d'échelle inter-propriétés</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="gen-li" data-bullet="▲"><strong>Achats groupés :</strong> négocier des contrats communs (linge de maison, produits d'accueil, maintenance, sécurité/alarme, blanchisserie). Économies estimées 30–50 K MAD/an sur les charges externes des deux propriétés.</li>
+            <li class="gen-li" data-bullet="▲"><strong>Gestion technologique mutualisée :</strong> un seul PMS/channel manager (Guesty, Cloudbeds, Lodgify) pour les deux riads — coût unique ~3 000 €/an au lieu de 2×, tableaux de bord consolidés en temps réel.</li>
+            <li class="gen-li" data-bullet="▲"><strong>Clients en débordement :</strong> proposer Dar Num (privatisation) aux groupes dépassant la capacité d'Assakina — flux de réservations croisés sans commission OTA additionnelle. Revenu direct estimé +30–60 K MAD/an.</li>
+            <li class="gen-li" data-bullet="▲"><strong>Transfert d'expertise :</strong> l'équipe Assakina (15 ans d'expérience, processus rodés) forme directement les nouveaux arrivants de Dar Num. Accélère la montée en qualité et protège la note Airbnb 5.0 pendant la période de transition.</li>
+            <li class="gen-li" data-bullet="▲"><strong>Conciergerie et partenaires communs :</strong> un seul réseau de prestataires (massage, excursions, traiteur, transferts aéroport) pour les deux propriétés → meilleurs tarifs négociés et offre plus large présentée aux clients.</li>
+            <li class="gen-li" data-bullet="▲"><strong>Branding portfolio :</strong> créer une identité commune "Collection Riads IH NUM" ou "Maison Num — Marrakech" avec un site vitrine regroupant les deux propriétés → SEO mutualisé, coût marketing divisé par deux.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:var(--red)"></span>
+          <span class="acc-icon">⚠️</span>
+          <span class="acc-label">Risques macro — portefeuille &amp; structure</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="gen-li" data-bullet="!"><strong>Concentration géographique totale :</strong> les deux propriétés sont dans la même médina — un choc externe (pandémie, instabilité politique, réglementation touristique) impacte simultanément 100 % du portefeuille. Aucun hedge géographique. <span class="signal alert">Risque structurel</span></li>
+            <li class="gen-li" data-bullet="!"><strong>Double transition simultanée en 2026 :</strong> Michelle &amp; Grant quittent Assakina + Naima a quitté Dar Num + compte Airbnb Dar Num toujours chez Céline/Yaser. Deux déstabilisations en parallèle — risque de dégradation simultanée des deux notes. <span class="signal alert">Risque immédiat</span></li>
+            <li class="gen-li" data-bullet="!"><strong>Financement 100 % fonds propres M-CORP :</strong> absence de dette bancaire = souplesse totale mais aussi absence de levier financier. En cas de besoin d'investissement urgent (rénovation, incident majeur), le seul recours est un apport supplémentaire de M-CORP. <span class="signal watch">À anticiper</span></li>
+            <li class="gen-li" data-bullet="!"><strong>Dépendance OTA cumulée :</strong> ~100 % des réservations des deux propriétés passent par Airbnb/Booking. La commission cumulée estimée (80–150 K MAD/an sur le portfolio) représente un "loyer invisible" à réduire progressivement.</li>
+            <li class="gen-li" data-bullet="!"><strong>Permis d'habiter absents sur les deux biens :</strong> risque réglementaire systémique si la commune de Marrakech durcit sa politique de régularisation — impacte potentiellement les deux propriétés simultanément.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#059669"></span>
+          <span class="acc-icon">🗓️</span>
+          <span class="acc-label">Feuille de route IH NUM — 2026 · 2027 · 2028</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <div class="reco-grid">
+            <div class="reco-col gen-col">
+              <h4>2026 — Consolidation</h4>
+              <ul>
+                <li class="gen-li" data-bullet="🔴">Assakina : sécuriser transition Michelle &amp; Grant (4–8 sem.)</li>
+                <li class="gen-li" data-bullet="🔴">Dar Num : transférer compte Airbnb + recruter remplaçant Naima</li>
+                <li class="gen-li" data-bullet="→">Mettre en place un channel manager commun aux deux riads</li>
+                <li class="gen-li" data-bullet="→">Ouvrir comptes bancaires marocains dédiés aux deux exploitations</li>
+                <li class="gen-li" data-bullet="→">Lancer démarche permis d'habiter sur les deux propriétés</li>
+                <li class="gen-li" data-bullet="→">AG IH NUM : approuver les bilans, valider la stratégie 2026</li>
+                <li class="gen-li" data-bullet="→">Objectif CA consolidé : &gt; 2 000 K MAD</li>
+              </ul>
+            </div>
+            <div class="reco-col gen-col">
+              <h4>2027 — Optimisation</h4>
+              <ul>
+                <li class="gen-li" data-bullet="→">Assakina : résultat net positif · EBE &gt; 200 K MAD</li>
+                <li class="gen-li" data-bullet="→">Dar Num : 150+ nuits · Superhost Airbnb · extras facturables</li>
+                <li class="gen-li" data-bullet="→">Refinancer compte d'associés en crédit hypothécaire marocain</li>
+                <li class="gen-li" data-bullet="→">Mettre en place convention management M-CORP / IH NUM</li>
+                <li class="gen-li" data-bullet="→">Lancer réservations directes sur les deux sites web</li>
+                <li class="gen-li" data-bullet="→">Créer branding commun "Collection Riads IH NUM"</li>
+                <li class="gen-li" data-bullet="→">Objectif CA consolidé : &gt; 2 300 K MAD · EBE &gt; 400 K MAD</li>
+              </ul>
+            </div>
+            <div class="reco-col gen-col">
+              <h4>2028 — Croissance</h4>
+              <ul>
+                <li class="gen-li" data-bullet="→">CA consolidé &gt; 2 600 K MAD (~240 K€) · EBE &gt; 650 K MAD</li>
+                <li class="gen-li" data-bullet="→">Résultat net positif sur les deux propriétés</li>
+                <li class="gen-li" data-bullet="→">Taux direct &gt; 20 % sur les deux riads</li>
+                <li class="gen-li" data-bullet="→">Réserve de trésorerie consolidée : 6 mois de charges (~300 K MAD)</li>
+                <li class="gen-li" data-bullet="→">Évaluer 3ème acquisition : médina de Marrakech, Essaouira ou Fès</li>
+                <li class="gen-li" data-bullet="→">Étude de valorisation du portefeuille (exit ou refinancement)</li>
+                <li class="gen-li" data-bullet="→">Rendement net cible : 4–5 % sur capital investi total</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /tab-general -->
+
 </main>
 
 <script>
@@ -812,7 +1031,8 @@ if (sessionStorage.getItem('ra_auth') === '1') {
 }
 
 // ── Onglets
-let _dnInitialized = false;
+let _dnInitialized  = false;
+let _genInitialized = false;
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -823,6 +1043,12 @@ function switchTab(tabId, btn) {
     renderFinTableDN();
     initChartsDN();
     _dnInitialized = true;
+  }
+  if (tabId === 'general' && !_genInitialized) {
+    renderKPIsGen();
+    renderFinTableGen();
+    initChartsGen();
+    _genInitialized = true;
   }
 }
 
@@ -861,6 +1087,14 @@ const DEFINITIONS = {
   "Note Airbnb DN":   { title: "Note Airbnb — Dar Num", desc: "Note parfaite 5.0/5 sur 98 avis accumulés. Capital réputationnel exceptionnel — l'algorithme Airbnb favorise ces profils. À préserver impérativement après transfert de compte.", formula: "5.0/5 · 98 avis · Listing : Riad privatisé de 320m2 - piscine chauffée" },
   "Tarif de base DN": { title: "Tarif de base Airbnb — Dar Num", desc: "Tarif pour 2 personnes en basse saison, bien entier en privatisation complète. +20 €/nuit par personne supplémentaire. En haute saison (nov.–avril) : surcoût de +30 à +50 % applicable.", formula: "2 pers. : 450 €/nuit · 9 pers. : ~590 €/nuit · Min. 2 nuits" },
   "Prix acq. DN":     { title: "Prix d'acquisition — Dar Num", desc: "Acte notarié du 4 sept. 2025 — 10 307 600 MAD immobilier + 1 000 000 MAD mobilier inclus. All-in avec frais notariaux : 12 011 218 MAD ≈ 1 092 K€.", formula: "≈ 937 K€ immobilier + 91 K€ mobilier = 1 028 K€ + 64 K€ frais" },
+  "CA consolidé":     { title: "CA consolidé IH NUM 2025", desc: "Chiffre d'affaires combiné des deux propriétés. Dar Num représente seulement 4 mois (sept.–déc. 2025) ; le rythme annualisé du portefeuille est de ~2 330 K MAD.", formula: "Assakina 1 132 K + Dar Num 401 K = 1 533 K MAD" },
+  "EBE consolidé":    { title: "EBE consolidé — Excédent Brut d'Exploitation", desc: "Le portefeuille génère un EBE positif dès la première année combinée. Assakina (+134 K MAD) absorbe le quasi-nul de Dar Num (−8 K MAD).", formula: "Assakina +134 K + Dar Num −8 K = +126 K MAD" },
+  "CAF consolidée":   { title: "CAF consolidée — Capacité d'Autofinancement", desc: "Négative en raison des charges financières exceptionnelles du compte d'associés de Dar Num (414 K MAD). Redeviendra positive dès 2026 avec la pleine activité de DN.", formula: "Assakina +83 K + Dar Num −422 K = −339 K MAD" },
+  "Tréso. totale":    { title: "Trésorerie totale IH NUM", desc: "Disponibilités combinées des deux sociétés au 31/12/2025. Coussin de sécurité couvrant environ 4 mois de charges d'exploitation cumulées.", formula: "Assakina 104 K + Dar Num 1 040 K = 1 144 K MAD" },
+  "Capital investi":  { title: "Capital investi total", desc: "Investissement all-in : prix d'acquisition + frais notariaux des deux propriétés. Actif immobilier total estimé à ~26 M MAD en valeur de bilan.", formula: "Assakina 1 300 K€ + Dar Num 1 028 K€ + frais 64 K€ = 2 392 K€" },
+  "Rendement brut":   { title: "Rendement brut sur capital investi", desc: "Rapport entre le CA 2025 annualisé (~212 K€ sur base des deux propriétés en pleine activité) et le capital total investi de 2 392 K€. Cible réaliste 2027 : ~9 %.", formula: "CA annualisé ~212 K€ / 2 392 K€ = ~8,9 % (cible 2027)" },
+  "CA cible 2027":    { title: "CA cible consolidé 2027", desc: "Objectif en régime de croisière : Assakina 1 400 K MAD + Dar Num 1 030 K MAD (180 nuits/an · 520 €/nuit moyen). Représente ×1,6 vs 2025.", formula: "Assakina 1 400 K + Dar Num 1 030 K = 2 430 K MAD (~221 K€)" },
+  "EBE cible 2027":   { title: "EBE cible consolidé 2027", desc: "Objectif de marge opérationnelle en régime de croisière. Assakina ~200 K MAD + Dar Num ~450 K MAD. Marge EBE/CA cible : ~27 %. Rendement net sur capital : 4–5 %.", formula: "Assakina ~200 K + Dar Num ~450 K = ~650 K MAD (~59 K€)" },
 };
 
 function renderKPIs() {
@@ -926,6 +1160,35 @@ function initCharts() {
     options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }, cutout: '60%' }
   });
 }
+
+// ══════════════════════════════════════════════════════════
+// GÉNÉRAL — Données consolidées IH NUM
+// ══════════════════════════════════════════════════════════
+const FINANCIAL_GEN = {
+  caAssakina:    1131729,
+  caDarNum:       400608,
+  caConsolide:   1532337,  // 1 131 729 + 400 608
+  ebeAssakina:    134486,
+  ebeDarNum:       -8253,
+  ebeConsolide:   126233,  // 134 486 + (−8 253)
+  rnAssakina:     -27791,
+  rnDarNum:      -701580,
+  rnConsolide:   -729371,  // −27 791 + (−701 580)
+  cafAssakina:     83064,
+  cafDarNum:     -421712,
+  cafConsolide:  -338648,  // 83 064 + (−421 712)
+  tresoAssakina:  104110,
+  tresoDarNum:   1040244,
+  tresoConsolide:1144354,  // 104 110 + 1 040 244
+  vaAssakina:     615458,
+  vaDarNum:        57162,
+  vaConsolide:    672620,  // 615 458 + 57 162
+  investTotal:      2392,  // K€ all-in
+  caCA27:        2430000,  // Assakina 1 400 K + Dar Num 1 030 K
+  caCA27Assakina:1400000,
+  caCA27DarNum:  1030000,
+  ebeCA27:        650000,  // midpoint 600–700 K MAD
+};
 
 // ══════════════════════════════════════════════════════════
 // DAR NUM — Données & rendu
@@ -1029,6 +1292,104 @@ function initChartsDN() {
     options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }, cutout: '60%' }
   });
 
+}
+
+// ══════════════════════════════════════════════════════════
+// GÉNÉRAL — Rendu
+// ══════════════════════════════════════════════════════════
+function renderKPIsGen() {
+  const g = FINANCIAL_GEN;
+  const kpis = [
+    { label: "CA consolidé",   value: Math.round(g.caConsolide/1000) + ' K MAD',            sub: '≈ ' + Math.round(g.caConsolide/11000) + ' K€ · dont DN 4 mois seulement', badge: 'up',      badgeTxt: '▲ Assakina 74 % · DN 26 %',   cls: 'kpi-card-gen' },
+    { label: "EBE consolidé",  value: '+' + Math.round(g.ebeConsolide/1000) + ' K MAD',     sub: 'Positif dès la 1ère année combinée !',                                     badge: 'up',      badgeTxt: '▲ Assakina compense DN',      cls: 'kpi-card-gen' },
+    { label: "CAF consolidée", value: '(' + Math.round(Math.abs(g.cafConsolide)/1000) + ' K MAD)', sub: 'Charges fin. DN 414 K · exceptionnelles',                          badge: 'neutral', badgeTxt: '→ Redevient + en 2026',       cls: 'kpi-card-gen' },
+    { label: "Tréso. totale",  value: Math.round(g.tresoConsolide/1000) + ' K MAD',         sub: '≈ ' + Math.round(g.tresoConsolide/11000) + ' K€ · 31/12/2025',            badge: 'up',      badgeTxt: '✓ ~4 mois de charges',        cls: 'kpi-card-gen' },
+    { label: "Capital investi",value: g.investTotal + ' K€',                                 sub: '2 riads · Médina de Marrakech',                                           badge: 'neutral', badgeTxt: 'Actif bilan ~26 M MAD',       cls: 'kpi-card-gen' },
+    { label: "Rendement brut", value: '~8,9 %',                                              sub: 'CA annualisé / capital investi · cible 2027',                             badge: 'up',      badgeTxt: '▲ Fourchette haute marché',   cls: 'kpi-card-gen' },
+    { label: "CA cible 2027",  value: Math.round(g.caCA27/1000) + ' K MAD',                 sub: '≈ ' + Math.round(g.caCA27/11000) + ' K€ · régime de croisière',          badge: 'up',      badgeTxt: '▲ ×1,6 vs 2025',             cls: 'kpi-card-gen' },
+    { label: "EBE cible 2027", value: '~650 K MAD',                                          sub: '≈ 59 K€ · marge EBE ~27 %',                                              badge: 'up',      badgeTxt: '▲ Rendement net 4–5 %',       cls: 'kpi-card-gen' },
+  ];
+  document.getElementById('kpiGridGen').innerHTML = kpis.map(k => `
+    <div class="kpi-card ${k.cls}" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()">
+      <i class="info-icon">i</i>
+      <div class="label">${k.label}</div>
+      <div class="value">${k.value}</div>
+      <div class="sub">${k.sub}</div>
+      <span class="badge ${k.badge}">${k.badgeTxt}</span>
+    </div>`).join('');
+}
+
+function renderFinTableGen() {
+  const a  = FINANCIAL;
+  const d  = FINANCIAL_DN;
+  const g  = FINANCIAL_GEN;
+  const fmt = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
+  const cls = n => n >= 0 ? 'positive' : 'negative';
+  const rows = [
+    { name: "Chiffre d'affaires", av: a.ca[3],          dn: d.ca,            total: g.caConsolide,    note: "DN = 4 mois · annualisé ~2 330 K MAD" },
+    { name: "EBE",                av: a.ebe[3],         dn: d.ebe,           total: g.ebeConsolide,   note: "Portefeuille positif dès l'an 1" },
+    { name: "Résultat net",       av: a.resultatNet[3], dn: d.resultatNet,   total: g.rnConsolide,    note: "DN : 414 K charges fin. + 600 K impôts acq." },
+    { name: "CAF",                av: a.caf[3],         dn: d.caf,           total: g.cafConsolide,   note: "Redevient positive dès 2026" },
+    { name: "Trésorerie",         av: a.tresorerie[3],  dn: d.tresorerie,    total: g.tresoConsolide, note: "Fin 2025 · ~4 mois de charges couverts" },
+    { name: "Valeur ajoutée",     av: a.va[3],          dn: d.va,            total: g.vaConsolide,    note: "DN estimée hors charges d'acquisition" },
+  ];
+  document.getElementById('finTableBodyGen').innerHTML = rows.map(r => `
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td class="${cls(r.av)}">${fmt(r.av)}</td>
+      <td class="${cls(r.dn)}">${fmt(r.dn)}</td>
+      <td class="${cls(r.total)}" style="font-weight:700">${fmt(r.total)}</td>
+      <td style="color:var(--text-light);font-size:0.82rem">${r.note}</td>
+    </tr>`).join('');
+}
+
+function initChartsGen() {
+  const g  = FINANCIAL_GEN;
+  const GA = '#8B4513', DN = '#1D4ED8';
+
+  // Grouped bar — CA comparatif Assakina vs Dar Num
+  new Chart(document.getElementById('chartGenCA'), {
+    type: 'bar',
+    data: {
+      labels: ['2022', '2023', '2024', '2025', '2026 cible'],
+      datasets: [
+        {
+          label: 'Riad Assakina',
+          data: [596875, 781101, 872435, 1131729, 1400000],
+          backgroundColor: [GA+'80', GA+'80', GA+'80', GA, GA+'60'],
+          borderColor: GA, borderWidth: 2, borderRadius: 4
+        },
+        {
+          label: 'Dar Num',
+          data: [null, null, null, 400608, 1030000],
+          backgroundColor: [null, null, null, DN, DN+'60'],
+          borderColor: DN, borderWidth: 2, borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0) + 'K' } } }
+    }
+  });
+
+  // Doughnut — répartition de l'investissement
+  new Chart(document.getElementById('chartGenInvest'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Assakina (1 300 K€)', 'Dar Num all-in (1 092 K€)'],
+      datasets: [{ data: [1300, 1092], backgroundColor: [GA, DN], borderWidth: 2 }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'right', labels: { font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ' · ' + Math.round(ctx.parsed / 2392 * 100) + ' %' } }
+      },
+      cutout: '60%'
+    }
+  });
 }
 
 // ══════════════════════════════════════════════════════════
