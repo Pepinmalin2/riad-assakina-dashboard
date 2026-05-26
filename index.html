@@ -123,13 +123,13 @@
       justify-content: space-between;
       flex-wrap: wrap; gap: 8px;
     }
-    .prop-banner-darnum { border-left-color: #3B82F6; }
+    .prop-banner-darnum { border-left-color: #D97706; }
     .prop-tag {
       font-size: 0.68rem; font-weight: 800;
       text-transform: uppercase; letter-spacing: 1.2px;
       color: var(--terracotta); margin-right: 12px;
     }
-    .prop-tag-dn { color: #1D4ED8; }
+    .prop-tag-dn { color: #D97706; }
     .prop-detail { font-size: 0.8rem; color: var(--text-light); }
     .prop-badge {
       font-size: 0.72rem; font-weight: 700;
@@ -159,8 +159,8 @@
       display: flex; align-items: center; justify-content: center;
       user-select: none;
     }
-    .kpi-card-dn { border-left-color: #3B82F6; }
-    .kpi-card-dn .value { color: #1D4ED8; }
+    .kpi-card-dn { border-left-color: #D97706; }
+    .kpi-card-dn .value { color: #D97706; }
 
     /* TOOLTIP */
     .tooltip-box {
@@ -187,16 +187,16 @@
       margin: 0 0 16px 0; display: flex; align-items: center; gap: 10px;
     }
     .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-    .section-title-dn { color: #1D4ED8; }
-    .section-title-dn::after { background: #BFDBFE; }
+    .section-title-dn { color: #D97706; }
+    .section-title-dn::after { background: #FDE68A; }
 
     .table-wrap { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 28px; }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     thead tr { background: var(--terracotta); color: white; }
-    thead tr.dn-head { background: #1D4ED8; }
+    thead tr.dn-head { background: #D97706; }
     thead th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .5px; }
     tbody tr:nth-child(even) { background: #FAF5F0; }
-    tbody tr:nth-child(even).dn-row { background: #EFF6FF; }
+    tbody tr:nth-child(even).dn-row { background: #FFFBEB; }
     tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); }
     .positive { color: var(--green); font-weight: 600; }
     .negative { color: var(--red); font-weight: 600; }
@@ -208,16 +208,16 @@
       color: white; border-radius: 14px; padding: 22px 26px; margin-bottom: 14px;
     }
     .synthese-banner-dn {
-      background: linear-gradient(135deg, #1D4ED8 0%, #1E3A8A 100%);
+      background: linear-gradient(135deg, #D97706 0%, #92400E 100%);
     }
     .synthese-banner .tag {
       font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 1px; color: var(--gold); margin-bottom: 10px;
     }
-    .synthese-banner-dn .tag { color: #93C5FD; }
+    .synthese-banner-dn .tag { color: #FCD34D; }
     .synthese-banner p { font-size: 0.88rem; line-height: 1.7; opacity: .92; }
     .synthese-banner p strong { color: var(--gold); font-weight: 700; }
-    .synthese-banner-dn p strong { color: #93C5FD; }
+    .synthese-banner-dn p strong { color: #FCD34D; }
 
     /* Accordéon */
     .accordion { display: flex; flex-direction: column; gap: 8px; }
@@ -246,13 +246,13 @@
     .acc-body ul li { font-size: 0.84rem; line-height: 1.55; color: var(--text); padding-left: 20px; position: relative; }
     .acc-body ul li::before { content: attr(data-bullet); position: absolute; left: 0; font-size: 0.82rem; }
     .acc-body ul li strong { color: var(--terracotta); }
-    .acc-body ul li.dn-li strong { color: #1D4ED8; }
+    .acc-body ul li.dn-li strong { color: #D97706; }
     .acc-body .reco-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
     .acc-body .reco-col h4 {
       font-size: 0.75rem; font-weight: 700; color: var(--terracotta);
       margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
     }
-    .acc-body .reco-col.dn-col h4 { color: #1D4ED8; border-bottom-color: #BFDBFE; }
+    .acc-body .reco-col.dn-col h4 { color: #D97706; border-bottom-color: #FDE68A; }
     .signal {
       display: inline-block; padding: 2px 8px; border-radius: 20px;
       font-size: 0.68rem; font-weight: 700; margin-left: 5px; vertical-align: middle;
@@ -477,7 +477,7 @@
 
       <div class="acc-item">
         <button class="acc-btn" onclick="toggleAcc(this)">
-          <span class="acc-strip" style="background:#3B82F6"></span>
+          <span class="acc-strip" style="background:#D97706"></span>
           <span class="acc-icon">🎯</span>
           <span class="acc-label">Leviers de performance identifiés</span>
           <span class="acc-arrow">▼</span>
@@ -635,7 +635,7 @@
 
       <div class="acc-item">
         <button class="acc-btn" onclick="toggleAcc(this)">
-          <span class="acc-strip" style="background:#3B82F6"></span>
+          <span class="acc-strip" style="background:#D97706"></span>
           <span class="acc-icon">🏠</span>
           <span class="acc-label">Modèle économique — Privatisation complète Airbnb</span>
           <span class="acc-arrow">▼</span>
@@ -1219,7 +1219,7 @@ const FINANCIAL_DN = {
   chargesData: {
     labels: ['Charges externes', 'Impôts & taxes (acquisition)', 'Personnel', 'Dotations amort.'],
     values: [773509, 599918, 65415, 279868],
-    colors: ['#C9A227', '#DC2626', '#3B82F6', '#6B7280']
+    colors: ['#C9A227', '#DC2626', '#D97706', '#6B7280']
   },
   actifData: {
     labels: ['Terrains', 'Constructions', 'Mobilier'],
@@ -1277,7 +1277,7 @@ function renderFinTableDN() {
 
 function initChartsDN() {
   const d = FINANCIAL_DN;
-  const B = '#1D4ED8', Bl = '#93C5FD';
+  const B = '#D97706', Bl = '#FCD34D';
 
   // CA bar — 2025 partiel + projections
   new Chart(document.getElementById('chartDNCA'), {
@@ -1349,7 +1349,7 @@ function renderFinTableGen() {
 
 function initChartsGen() {
   const g  = FINANCIAL_GEN;
-  const GA = '#8B4513', DN = '#1D4ED8';
+  const GA = '#8B4513', DN = '#D97706';
 
   // Grouped bar — CA comparatif Assakina vs Dar Num
   new Chart(document.getElementById('chartGenCA'), {
