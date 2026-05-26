@@ -537,28 +537,28 @@
 
   <div class="charts-grid">
     <div class="chart-card">
+      <h3>Chiffre d'affaires (MAD)</h3>
+      <canvas id="chartDNCA"></canvas>
+    </div>
+    <div class="chart-card">
       <h3>Structure des charges 2025</h3>
       <canvas id="chartDNCharges"></canvas>
     </div>
     <div class="chart-card">
-      <h3>Actif immobilisé — Répartition</h3>
-      <canvas id="chartDNActif"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>CA vs Charges 2025 (MAD)</h3>
-      <canvas id="chartDNPerf"></canvas>
+      <h3>Valeur ajoutée (MAD)</h3>
+      <canvas id="chartDNVA"></canvas>
     </div>
   </div>
 
-  <div class="section-title section-title-dn">Compte de résultat 2025 — 1ère année partielle</div>
+  <div class="section-title section-title-dn">Tableau de synthèse financière — 2025 (1ère année · 4 mois)</div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr class="dn-head">
           <th>Indicateur</th>
-          <th>Montant 2025 (MAD)</th>
-          <th>Montant 2025 (€)</th>
-          <th>Contexte</th>
+          <th>2025 (MAD)</th>
+          <th>2025 (EUR)</th>
+          <th>Note</th>
         </tr>
       </thead>
       <tbody id="finTableBodyDN"></tbody>
@@ -861,14 +861,14 @@ const DEFINITIONS = {
   "Note Booking":     { title: "Note Booking.com", desc: "Score moyen sur 6 critères. 9.7 = top 1% mondial.", formula: "Personnel 9.9 · Propreté 9.8 · Confort 9.8 · Équipements 9.7" },
   "Note TripAdvisor": { title: "Note TripAdvisor", desc: "Note maximale 5/5 sur 772 avis. #25 sur 927 hôtels à Marrakech — top 3%.", formula: "#25 / 927 hôtels · 772 avis · 5 bulles" },
   "Prix acquisition": { title: "Prix d'acquisition Assakina", desc: "1 300 000 € répartis en deux actes notariés : immobilier (248 m²) + fonds de commerce.", formula: "≈ 990 K€ immobilier + 310 K€ fonds de commerce" },
-  "Tarif de base DN": { title: "Tarif de base Airbnb — Dar Num", desc: "Tarif Airbnb pour 2 personnes en basse saison, bien entier en privatisation complète. La tarification monte à ~590 €/nuit pour 9 adultes. En haute saison (nov.–avril) un surcoût de +30 à +50 % est applicable.", formula: "2 pers. : 450 €/nuit · 9 pers. : ~590 €/nuit · Min. 2 nuits" },
-  "Note Airbnb DN":   { title: "Note Airbnb — Dar Num", desc: "Note parfaite 5.0/5 sur 98 avis accumulés. Capital réputationnel exceptionnel — l'algorithme Airbnb favorise ces profils et génère un référencement organique premium. À préserver impérativement après transfert de compte.", formula: "5.0/5 · 98 avis · Listing : Dar Num Riad privatisé de 320m2 - piscine chauffée" },
-  "CA Dar Num":       { title: "CA partiel 2025 — Dar Num", desc: "Chiffre d'affaires de 4 mois (sept.–déc. 2025) post-acquisition. Rythme annualisé : ~1 200 K MAD, cohérent avec un taux d'occupation de ~65 % à 500 €/nuit en moyenne.", formula: "401 K MAD / 4 mois × 12 = ~1 200 K MAD annualisé" },
-  "Résultat net DN":  { title: "Résultat net 2025 — Dar Num", desc: "Perte de première année incluant les charges d'acquisition (frais notariaux 600 K MAD) et les charges financières (414 K MAD). Situation comptable normale pour un premier exercice.", formula: "Rés. net = Rés. exploitation (−288 K) + Rés. financier (−414 K)" },
-  "Tréso. Dar Num":   { title: "Trésorerie fin 2025 — Dar Num", desc: "Solide disponibilité en banque malgré l'exercice déficitaire. Le financement par compte d'associés M-CORP assure la liquidité opérationnelle.", formula: "Disponibilités au 31/12/2025 = 1 040 244 MAD ≈ 95 K€" },
-  "Prix acq. DN":     { title: "Prix d'acquisition Dar Num", desc: "Acte notarié du 4 sept. 2025 — 10 307 600 MAD immobilier + 1 000 000 MAD mobilier inclus. All-in avec frais notariaux : 12 011 218 MAD ≈ 1 092 K€.", formula: "≈ 937 K€ immobilier + 91 K€ mobilier = 1 028 K€ + 64 K€ frais" },
-  "Surface hab. DN":  { title: "Surface habitable — Dar Num", desc: "320 m² habitables sur plusieurs niveaux (vs 181 m² de surface cadastrale au sol). 4 suites avec salle de bain privée, 5 salons, 2 cuisines, 3 terrasses, piscine chauffée. Ancienne galerie d'art rénovée en 2023.", formula: "4 suites (26–33 m²) · 5 salons · 2 cuisines · 3 terrasses · Piscine UV 3×2,5m" },
-  "Capacité DN":      { title: "Capacité d'accueil — Dar Num", desc: "Privatisation complète pour 1 à 9 adultes. Aucune chambre individuelle — un seul groupe par séjour. Suite 3 peut accueillir un lit supplémentaire pour groupe familial de 10.", formula: "4 suites doubles · Max 9 adultes · Minimum 2 nuits" },
+  "CA Dar Num":       { title: "Chiffre d'affaires — Dar Num", desc: "CA de 4 mois (sept.–déc. 2025) post-acquisition. Rythme annualisé : ~1 200 K MAD, cohérent avec ~65 % de taux d'occupation à 500 €/nuit en moyenne.", formula: "401 K MAD sur 4 mois × 3 = ~1 200 K MAD annualisé" },
+  "EBE Dar Num":      { title: "EBE — Excédent Brut d'Exploitation", desc: "Quasi-nul en 2025 : l'activité opérationnelle couvre presque ses charges courantes dès les 4 premiers mois. Les charges d'acquisition (600 K MAD impôts enregistrement) plombent le résultat mais sont exceptionnelles.", formula: "EBE = Rés. exploitation (−288 K) + Dotations (280 K) = −8 K" },
+  "CAF Dar Num":      { title: "CAF — Capacité d'Autofinancement", desc: "Négative en première année en raison des charges financières du compte d'associés (414 K MAD). Redeviendra positive dès que le CA annualisé couvre les charges fixes.", formula: "CAF = Résultat net (−702 K) + Dotations (280 K) = −422 K" },
+  "Tréso. Dar Num":   { title: "Trésorerie nette — Dar Num", desc: "Solide disponibilité en banque malgré l'exercice déficitaire. Le financement par compte d'associés M-CORP assure la liquidité opérationnelle.", formula: "Disponibilités au 31/12/2025 = 1 040 244 MAD ≈ 95 K€" },
+  "VA Dar Num":       { title: "Valeur ajoutée — Dar Num", desc: "Estimée hors charges d'acquisition (frais enregistrement 600 K MAD). Représente la richesse créée par l'exploitation courante : CA moins les charges opérationnelles directement consommées.", formula: "VA ≈ EBE (−8 K) + Personnel (65 K) = 57 K MAD (estimé)" },
+  "Note Airbnb DN":   { title: "Note Airbnb — Dar Num", desc: "Note parfaite 5.0/5 sur 98 avis accumulés. Capital réputationnel exceptionnel — l'algorithme Airbnb favorise ces profils. À préserver impérativement après transfert de compte.", formula: "5.0/5 · 98 avis · Listing : Riad privatisé de 320m2 - piscine chauffée" },
+  "Tarif de base DN": { title: "Tarif de base Airbnb — Dar Num", desc: "Tarif pour 2 personnes en basse saison, bien entier en privatisation complète. +20 €/nuit par personne supplémentaire. En haute saison (nov.–avril) : surcoût de +30 à +50 % applicable.", formula: "2 pers. : 450 €/nuit · 9 pers. : ~590 €/nuit · Min. 2 nuits" },
+  "Prix acq. DN":     { title: "Prix d'acquisition — Dar Num", desc: "Acte notarié du 4 sept. 2025 — 10 307 600 MAD immobilier + 1 000 000 MAD mobilier inclus. All-in avec frais notariaux : 12 011 218 MAD ≈ 1 092 K€.", formula: "≈ 937 K€ immobilier + 91 K€ mobilier = 1 028 K€ + 64 K€ frais" },
 };
 
 function renderKPIs() {
@@ -945,6 +945,8 @@ function initCharts() {
 // ══════════════════════════════════════════════════════════
 const FINANCIAL_DN = {
   ca: 400608,
+  ebe: -8253,           // résultat exploitation (-288121) + dotations (279868)
+  va: 57162,            // ebe (-8253) + personnel (65415) — estimé hors charges acq.
   chargesExt: 773509,
   impots: 599918,
   personnel: 65415,
@@ -975,15 +977,17 @@ const FINANCIAL_DN = {
 function renderKPIsDN() {
   const d = FINANCIAL_DN;
   const fmt = v => (Math.abs(v)/1000).toFixed(0) + ' K MAD';
+  const ca25 = d.ca;
+  const evCA = '▲ ×3 annualisé';
   const kpis = [
-    { label: "Tarif de base DN",  value: '450 €/nuit',            sub: '2 pers. · +20 €/pers. supp.',                badge: 'up',      badgeTxt: 'Max ~590 €/nuit (9 pers.)', cls: 'kpi-card-dn' },
-    { label: "Note Airbnb DN",    value: '5.0 / 5 ★',             sub: '98 avis · Listing actif',                    badge: 'up',      badgeTxt: '▲ Note parfaite',          cls: 'kpi-card-dn' },
-    { label: "CA Dar Num",        value: fmt(d.ca),               sub: '≈ 36 K€ · 4 mois (sept.–déc.)',              badge: 'up',      badgeTxt: '▲ ~1 200 K MAD/an rythme', cls: 'kpi-card-dn' },
-    { label: "Résultat net DN",   value: '(' + fmt(d.resultatNet) + ')', sub: 'Dont 600K frais acq. 1 fois',         badge: 'down',    badgeTxt: '▼ Normal année 1',         cls: 'kpi-card-dn' },
-    { label: "Tréso. Dar Num",    value: fmt(d.tresorerie),       sub: '≈ 95 K€ · Fin 2025',                         badge: 'up',      badgeTxt: '✓ Solide',                 cls: 'kpi-card-dn' },
-    { label: "Prix acq. DN",      value: '1 028 K€',              sub: '11 308 K MAD · 4 sept. 2025',                badge: 'neutral', badgeTxt: 'Immo + mobilier',          cls: 'kpi-card-dn' },
-    { label: "Surface hab. DN",   value: '320 m²',                sub: '4 suites · 5 salons · 3 terrasses',          badge: 'neutral', badgeTxt: 'Piscine · Rénov. 2023',    cls: 'kpi-card-dn' },
-    { label: "Capacité DN",       value: '9 adultes',             sub: '4 suites · Min. 2 nuits',                    badge: 'neutral', badgeTxt: 'Privatisation complète',   cls: 'kpi-card-dn' },
+    { label: "CA Dar Num",      value: fmt(ca25),                     sub: '≈ ' + (ca25/11000).toFixed(0) + ' K€ · 4 mois (sept.–déc.)', badge: 'up',      badgeTxt: evCA,                         cls: 'kpi-card-dn' },
+    { label: "EBE Dar Num",     value: '(' + fmt(d.ebe) + ')',        sub: '≈ 0 · hors charges acquisition',                             badge: 'neutral', badgeTxt: 'Opérationnel quasi-nul',     cls: 'kpi-card-dn' },
+    { label: "CAF Dar Num",     value: '(' + fmt(d.caf) + ')',        sub: 'Dont charges fin. 414 K MAD',                                badge: 'down',    badgeTxt: '▼ Normal année 1',           cls: 'kpi-card-dn' },
+    { label: "Tréso. Dar Num",  value: fmt(d.tresorerie),             sub: '≈ ' + (d.tresorerie/11000).toFixed(0) + ' K€ · Fin 2025',   badge: 'up',      badgeTxt: '✓ Solide',                   cls: 'kpi-card-dn' },
+    { label: "VA Dar Num",      value: fmt(d.va),                     sub: 'Estimée hors charges acq.',                                  badge: 'neutral', badgeTxt: '≈ ' + (d.va/11000).toFixed(0) + ' K€', cls: 'kpi-card-dn' },
+    { label: "Note Airbnb DN",  value: '5.0 / 5 ★',                  sub: 'Exceptionnel · 98 avis',                                     badge: 'up',      badgeTxt: '▲ Note parfaite',            cls: 'kpi-card-dn' },
+    { label: "Tarif de base DN",value: '450 €/nuit',                  sub: '2 pers. · +20€/pers. · privatisation',                       badge: 'up',      badgeTxt: 'Max ~590 €/nuit (9 pers.)', cls: 'kpi-card-dn' },
+    { label: "Prix acq. DN",    value: '1 028 K€',                    sub: '11 308 K MAD · 4 sept. 2025',                                badge: 'neutral', badgeTxt: '320 m² · piscine',          cls: 'kpi-card-dn' },
   ];
   document.getElementById('kpiGridDN').innerHTML = kpis.map(k => `
     <div class="kpi-card ${k.cls}" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()">
@@ -997,33 +1001,39 @@ function renderKPIsDN() {
 
 function renderFinTableDN() {
   const d = FINANCIAL_DN;
-  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
-  const fmtE = n => (n >= 0 ? '≈ +' : '≈ ') + (n/11000).toFixed(0) + ' K€';
-  const cls  = n => n >= 0 ? 'positive' : 'negative';
   const rows = [
-    { name: "Chiffre d'affaires (partiel)", v: d.ca,                   note: "Quelques semaines d'activité" },
-    { name: "Charges externes",             v: -d.chargesExt,          note: "Inclut frais de démarrage" },
-    { name: "Impôts &amp; taxes",           v: -d.impots,              note: "Dont frais enregistrement acq." },
-    { name: "Personnel",                    v: -d.personnel,           note: "Effectif partiel" },
-    { name: "Dotations amortissements",     v: -d.dotations,           note: "Actif immobilisé" },
-    { name: "Résultat d'exploitation",      v: d.resultatExploitation, note: "Avant charges financières" },
-    { name: "Résultat financier",           v: d.resultatFinancier,    note: "Intérêts compte d'associés" },
-    { name: "Résultat net",                 v: d.resultatNet,          note: "Perte 1ère année · attendu" },
-    { name: "CAF",                          v: d.caf,                  note: "= Rés. net + Dotations" },
-    { name: "Trésorerie",                   v: d.tresorerie,           note: "Disponibilités fin 2025" },
+    { name: "Chiffre d'affaires", key: 'ca',          note: "4 mois · annualisé ~1 200 K MAD" },
+    { name: "EBE",               key: 'ebe',          note: "≈ 0 · hors charges acquisition" },
+    { name: "Résultat net",      key: 'resultatNet',  note: "Dont 414 K charges financières" },
+    { name: "CAF",               key: 'caf',          note: "= Rés. net + Dotations (280 K)" },
+    { name: "Trésorerie",        key: 'tresorerie',   note: "Fin 2025" },
+    { name: "Valeur ajoutée",    key: 'va',           note: "Estimée hors charges d'acquisition" },
   ];
+  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
+  const fmtE = n => n >= 0 ? '≈ +' + Math.round(n/11000) + ' K€' : '≈ (' + Math.round(Math.abs(n)/11000) + ' K€)';
+  const cls  = n => n >= 0 ? 'positive' : 'negative';
   document.getElementById('finTableBodyDN').innerHTML = rows.map(r => `
     <tr>
       <td><strong>${r.name}</strong></td>
-      <td class="${cls(r.v)}">${fmt(r.v)}</td>
-      <td class="${cls(r.v)}">${fmtE(r.v)}</td>
+      <td class="${cls(d[r.key])}">${fmt(d[r.key])}</td>
+      <td class="${cls(d[r.key])}">${fmtE(d[r.key])}</td>
       <td style="color:var(--text-light);font-size:0.82rem">${r.note}</td>
     </tr>`).join('');
 }
 
 function initChartsDN() {
   const d = FINANCIAL_DN;
-  const B = '#1D4ED8';
+  const B = '#1D4ED8', Bl = '#93C5FD';
+
+  // CA bar — 2025 partiel + projections
+  new Chart(document.getElementById('chartDNCA'), {
+    type: 'bar',
+    data: {
+      labels: ['2025 (4 mois)', '2026 cible', '2027 objectif'],
+      datasets: [{ label: 'CA (MAD)', data: [d.ca, 1030000, 1300000], backgroundColor: [B+'50', B+'80', B], borderColor: B, borderWidth: 2, borderRadius: 6 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
+  });
 
   // Doughnut charges
   new Chart(document.getElementById('chartDNCharges'), {
@@ -1032,28 +1042,14 @@ function initChartsDN() {
     options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }, cutout: '60%' }
   });
 
-  // Actif immobilisé bars
-  new Chart(document.getElementById('chartDNActif'), {
+  // Valeur ajoutée bar — 2025 + projections
+  new Chart(document.getElementById('chartDNVA'), {
     type: 'bar',
     data: {
-      labels: d.actifData.labels,
-      datasets: [{ label: 'Valeur (MAD)', data: d.actifData.values, backgroundColor: d.actifData.colors, borderWidth: 2, borderRadius: 6 }]
+      labels: ['2025 (4 mois)', '2026 cible', '2027 objectif'],
+      datasets: [{ label: 'Valeur ajoutée (MAD)', data: [d.va, 830000, 1050000], backgroundColor: [Bl+'80', Bl+'CC', Bl], borderColor: B, borderWidth: 2, borderRadius: 6 }]
     },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1)+'M' } } } }
-  });
-
-  // CA vs Charges grouped bar
-  const totalCharges = d.chargesExt + d.impots + d.personnel + d.dotations;
-  new Chart(document.getElementById('chartDNPerf'), {
-    type: 'bar',
-    data: {
-      labels: ['2025 (1ère année)'],
-      datasets: [
-        { label: 'CA', data: [d.ca], backgroundColor: '#16A34A99', borderColor: '#16A34A', borderWidth: 2, borderRadius: 6 },
-        { label: 'Charges totales', data: [totalCharges], backgroundColor: '#DC262699', borderColor: '#DC2626', borderWidth: 2, borderRadius: 6 }
-      ]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
   });
 }
 
