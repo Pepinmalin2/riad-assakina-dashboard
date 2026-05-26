@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Riad Assakina — Dashboard de Gestion</title>
+  <title>IH NUM — Dashboard Riads</title>
   <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -77,11 +77,66 @@
     .logo-circle {
       width: 44px; height: 44px; border-radius: 50%;
       background: var(--gold); display: flex; align-items: center; justify-content: center;
-      font-size: 20px; font-weight: 700; color: var(--terracotta); flex-shrink: 0;
+      font-size: 18px; font-weight: 700; color: var(--terracotta); flex-shrink: 0;
     }
     header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: .5px; }
     header p  { font-size: 0.78rem; opacity: .75; }
     .header-date { margin-left: auto; font-size: 0.82rem; opacity: .8; text-align: right; }
+
+    /* ── TAB NAVIGATION */
+    .tab-nav-wrap {
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(139,69,19,0.07);
+    }
+    .tab-nav {
+      max-width: 1400px; margin: 0 auto;
+      padding: 0 32px;
+      display: flex; gap: 0;
+    }
+    .tab-btn {
+      padding: 14px 28px;
+      background: none; border: none; cursor: pointer;
+      font-size: 0.88rem; font-weight: 600;
+      color: var(--text-light);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--terracotta); }
+    .tab-btn.active { color: var(--terracotta); border-bottom-color: var(--gold); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── PROPERTY BANNER */
+    .prop-banner {
+      background: linear-gradient(135deg, #FAF5F0 0%, #F5EBE0 100%);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 22px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap; gap: 8px;
+    }
+    .prop-banner-darnum { border-left-color: #3B82F6; }
+    .prop-tag {
+      font-size: 0.68rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--terracotta); margin-right: 12px;
+    }
+    .prop-tag-dn { color: #1D4ED8; }
+    .prop-detail { font-size: 0.8rem; color: var(--text-light); }
+    .prop-badge {
+      font-size: 0.72rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      background: #DCFCE7; color: #166534;
+    }
+    .prop-badge-watch { background: #FEF3C7; color: #92400E; }
 
     main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
 
@@ -104,20 +159,16 @@
       display: flex; align-items: center; justify-content: center;
       user-select: none;
     }
+    .kpi-card-dn { border-left-color: #3B82F6; }
+    .kpi-card-dn .value { color: #1D4ED8; }
 
     /* TOOLTIP */
     .tooltip-box {
-      display: none;
-      position: fixed;
-      z-index: 200;
-      background: #2C1810;
-      color: #FBF7F2;
-      border-radius: 10px;
-      padding: 12px 16px;
-      max-width: 280px;
-      font-size: 0.82rem;
-      line-height: 1.55;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      display: none; position: fixed; z-index: 200;
+      background: #2C1810; color: #FBF7F2;
+      border-radius: 10px; padding: 12px 16px;
+      max-width: 280px; font-size: 0.82rem;
+      line-height: 1.55; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
       pointer-events: none;
     }
     .tooltip-box strong { color: var(--gold); display: block; margin-bottom: 5px; font-size: 0.85rem; }
@@ -136,30 +187,37 @@
       margin: 0 0 16px 0; display: flex; align-items: center; gap: 10px;
     }
     .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-title-dn { color: #1D4ED8; }
+    .section-title-dn::after { background: #BFDBFE; }
 
     .table-wrap { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 28px; }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     thead tr { background: var(--terracotta); color: white; }
+    thead tr.dn-head { background: #1D4ED8; }
     thead th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .5px; }
     tbody tr:nth-child(even) { background: #FAF5F0; }
+    tbody tr:nth-child(even).dn-row { background: #EFF6FF; }
     tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); }
     .positive { color: var(--green); font-weight: 600; }
     .negative { color: var(--red); font-weight: 600; }
 
     /* ── ANALYSE SYNTHÉTIQUE */
     .analyse-wrap { margin-bottom: 32px; }
-
     .synthese-banner {
       background: linear-gradient(135deg, var(--terracotta) 0%, #6B3010 100%);
-      color: white; border-radius: 14px; padding: 22px 26px;
-      margin-bottom: 14px;
+      color: white; border-radius: 14px; padding: 22px 26px; margin-bottom: 14px;
+    }
+    .synthese-banner-dn {
+      background: linear-gradient(135deg, #1D4ED8 0%, #1E3A8A 100%);
     }
     .synthese-banner .tag {
       font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 1px; color: var(--gold); margin-bottom: 10px;
     }
+    .synthese-banner-dn .tag { color: #93C5FD; }
     .synthese-banner p { font-size: 0.88rem; line-height: 1.7; opacity: .92; }
     .synthese-banner p strong { color: var(--gold); font-weight: 700; }
+    .synthese-banner-dn p strong { color: #93C5FD; }
 
     /* Accordéon */
     .accordion { display: flex; flex-direction: column; gap: 8px; }
@@ -183,16 +241,18 @@
       transition: max-height .35s ease, padding .25s ease;
       padding: 0 20px;
     }
-    .acc-item.open .acc-body { max-height: 1200px; padding: 0 20px 20px; }
+    .acc-item.open .acc-body { max-height: 1400px; padding: 0 20px 20px; }
     .acc-body ul { list-style: none; display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
     .acc-body ul li { font-size: 0.84rem; line-height: 1.55; color: var(--text); padding-left: 20px; position: relative; }
     .acc-body ul li::before { content: attr(data-bullet); position: absolute; left: 0; font-size: 0.82rem; }
     .acc-body ul li strong { color: var(--terracotta); }
+    .acc-body ul li.dn-li strong { color: #1D4ED8; }
     .acc-body .reco-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
     .acc-body .reco-col h4 {
       font-size: 0.75rem; font-weight: 700; color: var(--terracotta);
       margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
     }
+    .acc-body .reco-col.dn-col h4 { color: #1D4ED8; border-bottom-color: #BFDBFE; }
     .signal {
       display: inline-block; padding: 2px 8px; border-radius: 20px;
       font-size: 0.68rem; font-weight: 700; margin-left: 5px; vertical-align: middle;
@@ -204,65 +264,38 @@
     @media (max-width: 768px) {
       .acc-body .reco-grid { grid-template-columns: 1fr; gap: 14px; }
       .synthese-banner p { font-size: 0.83rem; }
+      .tab-nav { padding: 0 12px; }
+      .tab-btn { padding: 12px 16px; font-size: 0.8rem; }
+      .prop-detail { font-size: 0.72rem; }
     }
 
     @media (max-width: 768px) {
-      /* ── Header */
-      header {
-        padding: 0 16px;
-        height: auto;
-        min-height: 60px;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-      }
-      .logo-circle { width: 36px; height: 36px; font-size: 16px; }
+      header { padding: 0 16px; height: auto; min-height: 60px; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
+      .logo-circle { width: 36px; height: 36px; font-size: 14px; }
       header h1 { font-size: 1.05rem; }
       header p  { font-size: 0.72rem; }
       .header-date { display: none; }
-
-      /* ── Layout */
       main { padding: 12px; }
-
-      /* ── KPI : 2 colonnes sur iPhone */
-      .kpi-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-bottom: 18px;
-      }
+      .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
       .kpi-card { padding: 14px 12px; border-radius: 10px; }
       .kpi-card .label { font-size: 0.65rem; letter-spacing: .5px; margin-bottom: 5px; }
       .kpi-card .value { font-size: 1.15rem; }
       .kpi-card .sub   { font-size: 0.68rem; }
       .kpi-card .badge { font-size: 0.62rem; padding: 2px 6px; }
       .kpi-card .info-icon { width: 15px; height: 15px; font-size: 0.6rem; top: 8px; right: 8px; }
-
-      /* ── Graphiques */
       .charts-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; }
       .chart-card  { padding: 14px 12px; border-radius: 10px; }
       .chart-card h3 { font-size: 0.75rem; margin-bottom: 12px; }
       .chart-card canvas { max-height: 200px; }
-
-      /* ── Titres de section */
       .section-title { font-size: 0.88rem; }
-
-      /* ── Tableaux : scroll horizontal */
       .table-wrap { overflow-x: hidden; border-radius: 10px; }
       table { font-size: 0.68rem; min-width: unset; width: 100%; }
       thead th { padding: 8px 6px; font-size: 0.62rem; letter-spacing: 0; }
       tbody td  { padding: 7px 6px; }
-
-      /* ── Tooltip */
-      .tooltip-box {
-        max-width: min(260px, 88vw);
-        font-size: 0.76rem;
-        padding: 10px 13px;
-        line-height: 1.45;
-        border-radius: 8px;
-      }
+      .tooltip-box { max-width: min(260px, 88vw); font-size: 0.76rem; padding: 10px 13px; line-height: 1.45; border-radius: 8px; }
       .tooltip-box strong { font-size: 0.78rem; margin-bottom: 4px; }
       .tooltip-box .formula { font-size: 0.68rem; margin-top: 5px; }
+      .prop-banner { padding: 10px 14px; }
     }
   </style>
 </head>
@@ -271,8 +304,8 @@
 <!-- ÉCRAN DE CONNEXION -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">RA</div>
-    <h1>Riad Assakina</h1>
+    <div class="login-logo">IN</div>
+    <h1>IH NUM — Riads</h1>
     <p>Dashboard de gestion — accès privé</p>
     <input type="password" id="pwd-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
     <button class="login-btn" onclick="checkPwd()">Accéder →</button>
@@ -281,15 +314,34 @@
 </div>
 
 <header>
-  <div class="logo-circle">RA</div>
+  <div class="logo-circle">IN</div>
   <div>
-    <h1>Riad Assakina</h1>
-    <p>14 Derb Alaati Allah — Médina de Marrakech</p>
+    <h1>IH NUM — Portefeuille Riads</h1>
+    <p>Marrakech · Dashboard de gestion</p>
   </div>
   <div class="header-date" id="headerDate"></div>
 </header>
 
+<!-- NAVIGATION ONGLETS -->
+<div class="tab-nav-wrap">
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('assakina', this)">🏠 Riad Assakina</button>
+    <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
+  </div>
+</div>
+
 <main>
+
+<!-- ═══════════════════════════════════════════ ONGLET 1 : RIAD ASSAKINA -->
+<div id="tab-assakina" class="tab-content active">
+
+  <div class="prop-banner">
+    <div>
+      <span class="prop-tag">Riad Assakina</span>
+      <span class="prop-detail">14 Derb Alaati Allah · Médina · TF 50.512/43 · 248 m² · Acquisition ~1 300 K€</span>
+    </div>
+    <span class="prop-badge">En exploitation</span>
+  </div>
 
   <div class="kpi-grid" id="kpiGrid"></div>
 
@@ -341,14 +393,12 @@
     </table>
   </div>
 
-
-  <!-- ══════════════════════════════════════════════ ANALYSE SYNTHÉTIQUE -->
   <div class="section-title">Analyse synthétique — Expert-comptable & Conseil en gestion</div>
   <div class="analyse-wrap">
 
     <div class="synthese-banner">
       <div class="tag">📋 Diagnostic global · Riad Assakina · Acquisition mai 2026</div>
-      <p>Le Riad Assakina présente un profil d'acquisition <strong>solide mais exigeant</strong> : un chiffre d'affaires en forte croissance (+45 % sur quatre ans, 1 132 K MAD en 2025), un EBE redevenu positif (+134 K MAD) et un positionnement commercial exceptionnel (Booking 9.7/10, TripAdvisor #25/927 à Marrakech), pour un prix d'acquisition de <strong>1 300 000 €</strong> justifié par la valeur foncière du bien (248 m², piscine, médina historique) et le goodwill d'une réputation construite sur quinze ans. Le principal risque à court terme est la <strong>transition propriétaire</strong> — Michelle & Grant sont au cœur de l'expérience client — tandis que la masse salariale (40 % du CA) et la dépendance aux OTA (commissions estimées à 15–18 %) constituent les deux leviers d'optimisation prioritaires.</p>
+      <p>Le Riad Assakina présente un profil d'acquisition <strong>solide mais exigeant</strong> : un chiffre d'affaires en forte croissance (+45 % sur quatre ans, 1 132 K MAD en 2025), un EBE redevenu positif (+134 K MAD) et un positionnement commercial exceptionnel (Booking 9.7/10, TripAdvisor #25/927 à Marrakech), pour un prix d'acquisition de <strong>1 300 000 €</strong> justifié par la valeur foncière du bien (248 m², piscine, médina historique) et le goodwill d'une réputation construite sur quinze ans. Le principal risque à court terme est la <strong>transition propriétaire</strong> — Michelle &amp; Grant sont au cœur de l'expérience client — tandis que la masse salariale (40 % du CA) et la dépendance aux OTA (commissions estimées à 15–18 %) constituent les deux leviers d'optimisation prioritaires.</p>
     </div>
 
     <div class="accordion">
@@ -382,7 +432,7 @@
           <ul>
             <li data-bullet="!"><strong>Résultat net structurellement négatif :</strong> −28 K MAD en 2025 malgré un EBE positif. Les dotations aux amortissements (111 K MAD) absorbent l'excédent — signe d'un actif valorisé et en cours d'amortissement. <span class="signal watch">À surveiller</span></li>
             <li data-bullet="!"><strong>Masse salariale dominante :</strong> 453 K MAD, soit 40 % du CA. Premier poste de charges. Tout recrutement ou revalorisation salariale impacte directement l'EBE.</li>
-            <li data-bullet="!"><strong>Risque de transition propriétaire :</strong> Michelle & Grant sont mentionnés dans plus de 60 % des avis. Leur départ est le principal risque opérationnel. Une transition mal gérée peut dégrader la note en quelques semaines. <span class="signal alert">Risque élevé</span></li>
+            <li data-bullet="!"><strong>Risque de transition propriétaire :</strong> Michelle &amp; Grant sont mentionnés dans plus de 60 % des avis. Leur départ est le principal risque opérationnel. Une transition mal gérée peut dégrader la note en quelques semaines. <span class="signal alert">Risque élevé</span></li>
             <li data-bullet="!"><strong>Absence de permis d'habitation :</strong> déclarée dans l'acte notarié. Situation courante dans la médina mais génère un risque juridique résiduel et peut bloquer certains travaux d'extension.</li>
             <li data-bullet="!"><strong>Dépendance aux OTA :</strong> Booking et TripAdvisor génèrent l'essentiel des réservations. Les commissions (15–18 % du CA estimé) constituent un coût caché non isolé dans les bilans. <span class="signal watch">À optimiser</span></li>
           </ul>
@@ -435,7 +485,7 @@
             <div class="reco-col">
               <h4>0 – 3 mois</h4>
               <ul>
-                <li data-bullet="→">Période de transition avec Michelle & Grant (4–8 semaines ensemble)</li>
+                <li data-bullet="→">Période de transition avec Michelle &amp; Grant (4–8 semaines ensemble)</li>
                 <li data-bullet="→">Email personnalisé aux clients fidèles pour présenter le nouveau propriétaire</li>
                 <li data-bullet="→">Récupérer tous les accès admin OTA (Booking, Airbnb, Expedia, TripAdvisor)</li>
                 <li data-bullet="→">Ouvrir un compte bancaire marocain dédié à l'exploitation</li>
@@ -469,6 +519,223 @@
     </div>
   </div>
 
+</div><!-- /tab-assakina -->
+
+
+<!-- ═══════════════════════════════════════════ ONGLET 2 : DAR NUM -->
+<div id="tab-darnum" class="tab-content">
+
+  <div class="prop-banner prop-banner-darnum">
+    <div>
+      <span class="prop-tag prop-tag-dn">Dar Num</span>
+      <span class="prop-detail">Derb El Boumba n°3 · Médina · TF 36.484/43 · 181 m² · Acquisition ~1 028 K€</span>
+    </div>
+    <span class="prop-badge prop-badge-watch">Démarrage 2025</span>
+  </div>
+
+  <div class="kpi-grid" id="kpiGridDN"></div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Structure des charges 2025</h3>
+      <canvas id="chartDNCharges"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Actif immobilisé — Répartition</h3>
+      <canvas id="chartDNActif"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>CA vs Charges 2025 (MAD)</h3>
+      <canvas id="chartDNPerf"></canvas>
+    </div>
+  </div>
+
+  <div class="section-title section-title-dn">Compte de résultat 2025 — 1ère année partielle</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="dn-head">
+          <th>Indicateur</th>
+          <th>Montant 2025 (MAD)</th>
+          <th>Montant 2025 (€)</th>
+          <th>Contexte</th>
+        </tr>
+      </thead>
+      <tbody id="finTableBodyDN"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title section-title-dn">Actif immobilisé &amp; Bilan</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="dn-head">
+          <th>Poste</th>
+          <th>Montant (MAD)</th>
+          <th>Montant (€)</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Terrains</td><td class="positive">6 122 200</td><td>≈ 557 K€</td><td>Valeur foncière</td></tr>
+        <tr><td>Constructions</td><td class="positive">4 185 400</td><td>≈ 380 K€</td><td>Bâtiment principal</td></tr>
+        <tr><td>Mobilier en cours</td><td class="positive">1 000 000</td><td>≈ 91 K€</td><td>Mobilier acquisition</td></tr>
+        <tr><td><strong>Total actif immobilisé</strong></td><td><strong>12 148 045</strong></td><td><strong>≈ 1 104 K€</strong></td><td></td></tr>
+        <tr><td>Trésorerie (disponibilités)</td><td class="positive">1 040 244</td><td>≈ 95 K€</td><td>Solde fin 2025</td></tr>
+        <tr><td><strong>Total actif</strong></td><td><strong>13 619 216</strong></td><td><strong>≈ 1 238 K€</strong></td><td></td></tr>
+        <tr><td>Compte d'associés (passif)</td><td class="negative">13 696 193</td><td>≈ 1 245 K€</td><td>Financement M-CORP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title section-title-dn">Équipe — Dar Num</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="dn-head">
+          <th>Poste</th>
+          <th>Statut</th>
+          <th>Charges salariales 2025</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Équipe opérationnelle</td><td>En cours de constitution</td><td class="neutral">65 415 MAD</td><td>≈ 6 K€ · Quelques semaines</td></tr>
+        <tr><td>Direction / Gérance</td><td>À recruter</td><td>—</td><td>Priorité immédiate</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title section-title-dn">Analyse synthétique — Expert-comptable &amp; Conseil en gestion</div>
+  <div class="analyse-wrap">
+
+    <div class="synthese-banner synthese-banner-dn">
+      <div class="tag">📋 Diagnostic global · Dar Num · Acquisition 4 septembre 2025</div>
+      <p>Acquis le 4 septembre 2025 pour 11 307 600 MAD (≈ <strong>1 028 000 €</strong>), Dar Num — anciennement Thiam Jacquot, Derb El Boumba n°3 — est la deuxième propriété du portefeuille IH NUM. Ce riad de <strong>181 m² en médina de Marrakech</strong> est en phase de démarrage intégral : le bilan 2025 reflète quelques semaines d'activité seulement (CA partiel 401 K MAD), des charges d'acquisition comptabilisées en première année (frais notariaux, enregistrement), et un résultat net de −702 K MAD <strong>attendu et normal pour un premier exercice</strong>. La trésorerie est solide (1 040 K MAD), le financement est intégralement assuré via le compte d'associés M-CORP (13 696 K MAD), et tout le potentiel commercial reste à construire — recrutement d'équipe, rénovation, référencement OTA et montée en puissance progressive constituent les axes stratégiques des 12 à 24 prochains mois.</p>
+    </div>
+
+    <div class="accordion">
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#3B82F6"></span>
+          <span class="acc-icon">🏛</span>
+          <span class="acc-label">Atouts du bien et de l'acquisition</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="dn-li" data-bullet="▲"><strong>Localisation médina historique :</strong> Derb El Boumba n°3, à quelques minutes à pied des sites majeurs (Jemaa el-Fna, souks, Palais Bahia). Potentiel touristique premium intact.</li>
+            <li class="dn-li" data-bullet="▲"><strong>Titre foncier sécurisé :</strong> TF 36.484/43 — propriété pleine et entière, hypothèque CIH levée à la date de l'acte (4 sept. 2025). Aucun litige identifié.</li>
+            <li class="dn-li" data-bullet="▲"><strong>Actif immobilisé solide :</strong> 12 148 045 MAD (≈ 1 104 K€) inscrit au bilan — terrains (6,1 M) + constructions (4,2 M) + mobilier (1,0 M). Valeur patrimoniale tangible et pérenne.</li>
+            <li class="dn-li" data-bullet="▲"><strong>Synergie avec Riad Assakina :</strong> portefeuille de deux propriétés géré par IH NUM — mutualisation des fournisseurs, des process, des accès OTA et de l'expérience opérationnelle acquise sur Assakina.</li>
+            <li class="dn-li" data-bullet="▲"><strong>Financement 100 % fonds propres :</strong> pas de dette bancaire — charge financière limitée, souplesse totale pour la stratégie d'investissement et de rénovation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:var(--red)"></span>
+          <span class="acc-icon">⚠️</span>
+          <span class="acc-label">Points de vigilance</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="dn-li" data-bullet="!"><strong>Bien sans historique d'exploitation connu :</strong> contrairement à Riad Assakina (15 ans de réputation OTA), Dar Num part de zéro — aucune note Booking, aucun avis TripAdvisor, clientèle à construire entièrement. <span class="signal alert">Risque élevé</span></li>
+            <li class="dn-li" data-bullet="!"><strong>Équipe inexistante :</strong> 65 415 MAD de charges de personnel seulement en 2025 (quelques semaines). Recrutement d'un gérant de riad expérimenté et d'une équipe de 3 à 5 personnes est un prérequis à l'ouverture commerciale.</li>
+            <li class="dn-li" data-bullet="!"><strong>Absence de permis d'habitation :</strong> identique à Riad Assakina — situation fréquente en médina mais bloque les travaux d'extension et certaines régularisations administratives. <span class="signal watch">À régulariser</span></li>
+            <li class="dn-li" data-bullet="!"><strong>Charges financières élevées en année 1 :</strong> 413 543 MAD de résultat financier négatif en 2025 — liées aux intérêts ou frais du compte d'associés. À surveiller sur les exercices suivants.</li>
+            <li class="dn-li" data-bullet="!"><strong>Surface inférieure à Assakina :</strong> 181 m² vs 248 m² — capacité d'accueil moindre (estimée 4 à 6 chambres). L'objectif de CA sera mécaniquement plus limité à configuration égale.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#F59E0B"></span>
+          <span class="acc-icon">📊</span>
+          <span class="acc-label">Évaluation de l'investissement à 1 028 000 €</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="dn-li" data-bullet="→"><strong>Prix au m² :</strong> 11 307 600 MAD / 181 m² = 62 472 MAD/m² ≈ 5 679 €/m². Fourchette haute de la médina, cohérente avec un bien sans travaux majeurs et dans un secteur touristique prime.</li>
+            <li class="dn-li" data-bullet="→"><strong>Comparaison avec Riad Assakina :</strong> ~1 300 000 € pour 248 m² = 5 242 €/m². Dar Num est légèrement supérieur au m², justifié par un mobilier inclus (1 000 000 MAD) et un état supposé meilleur.</li>
+            <li class="dn-li" data-bullet="→"><strong>Coût total d'entrée :</strong> acquisition 11 307 600 + frais notariaux 703 618 = 12 011 218 MAD ≈ 1 092 K€ all-in. À intégrer dans le calcul de rendement futur.</li>
+            <li class="dn-li" data-bullet="→"><strong>Rendement potentiel :</strong> sur la base d'un CA cible de 700 à 900 K MAD/an (objectif 2–3 ans), le rendement brut serait de 6 à 8 % — dans la norme des riads premium de Marrakech.</li>
+            <li class="dn-li" data-bullet="→"><strong>Levier patrimonial :</strong> en l'absence de dette bancaire, le rendement net converge vers le rendement brut une fois les charges stabilisées — profil très favorable à moyen terme pour IH NUM.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:var(--green)"></span>
+          <span class="acc-icon">🎯</span>
+          <span class="acc-label">Leviers de développement prioritaires</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <ul>
+            <li class="dn-li" data-bullet="→"><strong>Recrutement d'un gérant expérimenté :</strong> clé de voûte du projet. Un profil riad manager avec réseau OTA et maîtrise de l'anglais peut accélérer considérablement la montée en charge commerciale.</li>
+            <li class="dn-li" data-bullet="→"><strong>Positionnement premium dès le premier avis :</strong> les premières notes Booking et TripAdvisor sont déterminantes pour le référencement algorithmique. Cibler un lancement en haute saison (nov.–mars) avec une qualité de service irréprochable.</li>
+            <li class="dn-li" data-bullet="→"><strong>Synergies Assakina :</strong> clients d'Assakina en débordement, partage des fournisseurs (linge, produits d'accueil, maintenance), formation croisée des équipes, mutualisation des outils de gestion.</li>
+            <li class="dn-li" data-bullet="→"><strong>Rénovation et identité visuelle :</strong> créer une identité distincte de Dar Num (nom, décoration, concept) pour éviter la cannibalisation avec Assakina et capter une clientèle complémentaire.</li>
+            <li class="dn-li" data-bullet="→"><strong>Régularisation administrative :</strong> engager la démarche permis d'habitation et classification maison d'hôtes dès l'année 1 — condition sine qua non pour la TVA récupérable et certaines aides.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span class="acc-strip" style="background:#6366F1"></span>
+          <span class="acc-icon">🗓️</span>
+          <span class="acc-label">Plan d'action prioritaire — Dar Num</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <div class="reco-grid">
+            <div class="reco-col dn-col">
+              <h4>0 – 3 mois</h4>
+              <ul>
+                <li class="dn-li" data-bullet="→">Visite technique complète + état des lieux détaillé</li>
+                <li class="dn-li" data-bullet="→">Inventaire et évaluation du mobilier acquis (1 M MAD)</li>
+                <li class="dn-li" data-bullet="→">Ouvrir un compte bancaire marocain dédié à Dar Num</li>
+                <li class="dn-li" data-bullet="→">Définir le concept et l'identité de la propriété</li>
+                <li class="dn-li" data-bullet="→">Lancer la recherche d'un gérant de riad</li>
+              </ul>
+            </div>
+            <div class="reco-col dn-col">
+              <h4>3 – 12 mois</h4>
+              <ul>
+                <li class="dn-li" data-bullet="→">Travaux de rénovation ciblés (budget à définir)</li>
+                <li class="dn-li" data-bullet="→">Recrutement équipe (gérant + 2–3 personnes)</li>
+                <li class="dn-li" data-bullet="→">Création des listings OTA (Booking, Airbnb, Expedia)</li>
+                <li class="dn-li" data-bullet="→">Démarche permis d'habiter + classification hôtelière</li>
+                <li class="dn-li" data-bullet="→">Ouverture commerciale en haute saison (nov.–mars)</li>
+              </ul>
+            </div>
+            <div class="reco-col dn-col">
+              <h4>12 – 36 mois</h4>
+              <ul>
+                <li class="dn-li" data-bullet="→">Objectif CA 700–900 K MAD · EBE positif dès 2027</li>
+                <li class="dn-li" data-bullet="→">Note Booking &gt; 9.0 dès la première année complète</li>
+                <li class="dn-li" data-bullet="→">Développer synergies actives avec Riad Assakina</li>
+                <li class="dn-li" data-bullet="→">Constituer une trésorerie d'exploitation de 3 mois</li>
+                <li class="dn-li" data-bullet="→">Évaluer extension ou 3ème acquisition dans la médina</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /tab-darnum -->
+
 </main>
 
 <script>
@@ -479,7 +746,7 @@ function toggleAcc(btn) {
 }
 
 // ── Auth
-const PWD_HASH = 'c9553bef0966b272a080335ccf08c6e43dc53944ae682b7945206910e15b57dc'; // SHA-256 de "Assakina"
+const PWD_HASH = 'c9553bef0966b272a080335ccf08c6e43dc53944ae682b7945206910e15b57dc';
 async function checkPwd() {
   const val = document.getElementById('pwd-input').value;
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
@@ -497,6 +764,24 @@ if (sessionStorage.getItem('ra_auth') === '1') {
   document.getElementById('login-screen').classList.add('hidden');
 }
 
+// ── Onglets
+let _dnInitialized = false;
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
+  if (tabId === 'darnum' && !_dnInitialized) {
+    renderKPIsDN();
+    renderFinTableDN();
+    initChartsDN();
+    _dnInitialized = true;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// RIAD ASSAKINA — Données & rendu
+// ══════════════════════════════════════════════════════════
 const FINANCIAL = {
   years: ['2022', '2023', '2024', '2025'],
   ca:          [596875, 781101, 872435, 1131729],
@@ -512,32 +797,38 @@ const FINANCIAL = {
   }
 };
 
-// ── Définitions des indicateurs
 const DEFINITIONS = {
-  "CA 2025":          { title: "Chiffre d'affaires", desc: "Total des ventes encaissées sur l'année : nuitées, repas, services. C'est le point de départ de toute analyse — il ne dit rien sur la rentabilité.", formula: "CA = somme de toutes les recettes" },
-  "EBE 2025":         { title: "EBE — Excédent Brut d'Exploitation", desc: "Cash généré par l'activité courante, avant remboursement de dettes, impôts et amortissements. C'est le vrai indicateur de rentabilité opérationnelle du riad.", formula: "EBE = CA − Achats − Charges ext. − Personnel − Impôts locaux" },
-  "CAF 2025":         { title: "CAF — Capacité d'Autofinancement", desc: "Ressources internes disponibles pour investir ou rembourser. Différent du BFR : la CAF mesure ce que l'activité produit comme cash sur la période.", formula: "CAF = Résultat net + Dotations aux amortissements" },
-  "Trésorerie":       { title: "Trésorerie nette", desc: "Argent disponible en banque à la clôture de l'exercice. Indicateur de survie à court terme : si elle passe sous zéro, le riad ne peut plus payer ses charges.", formula: "Trésorerie = Disponibilités − Découverts bancaires" },
-  "Valeur ajoutée":   { title: "Valeur ajoutée (VA)", desc: "Richesse créée par le riad après déduction des achats et charges externes. Elle sert à payer le personnel, les impôts, les amortissements et à dégager un bénéfice.", formula: "VA = CA − Achats consommés − Charges externes" },
-  "Note Booking":     { title: "Note Booking.com", desc: "Score moyen calculé par Booking.com sur 6 critères : personnel, équipements, propreté, confort, rapport qualité/prix, situation géographique. 9.7 = top 1% mondial.", formula: "Personnel 9.9 · Propreté 9.8 · Confort 9.8 · Équipements 9.7" },
-  "Note TripAdvisor": { title: "Note TripAdvisor", desc: "Note maximale 5/5 sur 772 avis. Classement #25 sur 927 hôtels à Marrakech — top 3% de la ville. Construit sur 15+ ans par Michelle & Grant.", formula: "#25 / 927 hôtels · 772 avis · 5 bulles" },
-  "Prix acquisition": { title: "Prix d'acquisition total", desc: "1 300 000 € répartis en deux actes notariés signés simultanément : vente immobilière (248 m², TF 50.512/43) + cession du fonds de commerce (marque, clientèle, listings OTA, mobilier, 5 CDI).", formula: "≈ 990 K€ immobilier + 310 K€ fonds de commerce" },
+  "CA 2025":          { title: "Chiffre d'affaires", desc: "Total des ventes encaissées sur l'année : nuitées, repas, services.", formula: "CA = somme de toutes les recettes" },
+  "EBE 2025":         { title: "EBE — Excédent Brut d'Exploitation", desc: "Cash généré par l'activité courante, avant remboursement de dettes, impôts et amortissements.", formula: "EBE = CA − Achats − Charges ext. − Personnel − Impôts locaux" },
+  "CAF 2025":         { title: "CAF — Capacité d'Autofinancement", desc: "Ressources internes disponibles pour investir ou rembourser.", formula: "CAF = Résultat net + Dotations aux amortissements" },
+  "Trésorerie":       { title: "Trésorerie nette", desc: "Argent disponible en banque à la clôture de l'exercice.", formula: "Trésorerie = Disponibilités − Découverts bancaires" },
+  "Valeur ajoutée":   { title: "Valeur ajoutée (VA)", desc: "Richesse créée par le riad après déduction des achats et charges externes.", formula: "VA = CA − Achats consommés − Charges externes" },
+  "Note Booking":     { title: "Note Booking.com", desc: "Score moyen sur 6 critères. 9.7 = top 1% mondial.", formula: "Personnel 9.9 · Propreté 9.8 · Confort 9.8 · Équipements 9.7" },
+  "Note TripAdvisor": { title: "Note TripAdvisor", desc: "Note maximale 5/5 sur 772 avis. #25 sur 927 hôtels à Marrakech — top 3%.", formula: "#25 / 927 hôtels · 772 avis · 5 bulles" },
+  "Prix acquisition": { title: "Prix d'acquisition Assakina", desc: "1 300 000 € répartis en deux actes notariés : immobilier (248 m²) + fonds de commerce.", formula: "≈ 990 K€ immobilier + 310 K€ fonds de commerce" },
+  "CA Dar Num":       { title: "CA partiel 2025 — Dar Num", desc: "Chiffre d'affaires enregistré sur quelques semaines d'activité seulement (acquisition le 4 sept. 2025). Non représentatif d'une année pleine.", formula: "CA partiel ≈ quelques semaines d'exploitation" },
+  "Rés. exploitation": { title: "Résultat d'exploitation — Dar Num", desc: "Résultat opérationnel avant charges financières. Négatif en 1ère année en raison des coûts de démarrage et charges d'acquisition.", formula: "Rés. exploitation = CA − charges d'exploitation" },
+  "Résultat net DN":  { title: "Résultat net 2025 — Dar Num", desc: "Perte de première année incluant les charges d'acquisition (frais notariaux) et charges financières. Situation normale pour une première année.", formula: "Rés. net = Rés. exploitation + Rés. financier" },
+  "CAF DN":           { title: "CAF 2025 — Dar Num", desc: "Capacité d'autofinancement négative en première année. Les dotations aux amortissements (280 K MAD) limitent la perte réelle en cash.", formula: "CAF = Résultat net (−702 K) + Dotations (280 K)" },
+  "Tréso. Dar Num":   { title: "Trésorerie fin 2025 — Dar Num", desc: "Solide disponibilité en banque malgré l'exercice déficitaire, grâce au financement par compte d'associés M-CORP.", formula: "Disponibilités au 31/12/2025" },
+  "Actif immo DN":    { title: "Actif immobilisé — Dar Num", desc: "Total des actifs immobiliers et mobiliers inscrits au bilan : terrains, constructions et mobilier.", formula: "Terrains (6,1 M) + Constructions (4,2 M) + Mobilier (1,0 M)" },
+  "Prix acq. DN":     { title: "Prix d'acquisition Dar Num", desc: "Acte notarié du 4 sept. 2025 — 10 307 600 MAD immobilier + 1 000 000 MAD mobilier.", formula: "≈ 937 K€ immobilier + 91 K€ mobilier = 1 028 K€" },
+  "Financement DN":   { title: "Financement par compte d'associés", desc: "IH NUM est intégralement financée par M-CORP (SARL française, Paris 75002, détenue par Philippe MOYAL). Pas de dette bancaire.", formula: "Compte d'associés = 13 696 193 MAD ≈ 1 245 K€" },
 };
 
-// ── KPIs
 function renderKPIs() {
   const f = FINANCIAL;
   const ca25 = f.ca[3], ca24 = f.ca[2];
   const evCA = (((ca25/ca24)-1)*100).toFixed(1);
   const kpis = [
-    { label: "CA 2025",          value: (ca25/1000).toFixed(0) + ' K MAD',  sub: '≈ ' + (ca25/11000).toFixed(0) + ' K EUR',   badge: 'up',      badgeTxt: '▲ ' + evCA + '% vs 2024' },
-    { label: "EBE 2025",         value: (f.ebe[3]/1000).toFixed(0) + ' K MAD', sub: '11.9 % du CA',                             badge: 'up',      badgeTxt: '▲ Retour positif' },
-    { label: "CAF 2025",         value: (f.caf[3]/1000).toFixed(0) + ' K MAD', sub: 'Capacité autofinancement',                 badge: 'up',      badgeTxt: '▲ vs 2024' },
-    { label: "Trésorerie",       value: (f.tresorerie[3]/1000).toFixed(0) + ' K MAD', sub: 'Fin 2025',                         badge: 'neutral', badgeTxt: '≈ ' + (f.tresorerie[3]/11000).toFixed(0) + ' K EUR' },
-    { label: "Valeur ajoutée",   value: (f.va[3]/1000).toFixed(0) + ' K MAD',  sub: '2025',                                    badge: 'up',      badgeTxt: '▲ +44.8 % vs 2024' },
-    { label: "Note Booking",     value: '9.7 / 10',  sub: 'Exceptionnel · 100 avis',                                           badge: 'up',      badgeTxt: 'Personnel 9.9' },
-    { label: "Note TripAdvisor", value: '5 / 5 ★',  sub: '#25 / 927 hôtels Marrakech · 772 avis',                              badge: 'up',      badgeTxt: 'Excellent' },
-    { label: "Prix acquisition", value: '1 300 K€',  sub: 'Immeuble + Fonds de commerce',                                      badge: 'neutral', badgeTxt: '248 m² + piscine' },
+    { label: "CA 2025",          value: (ca25/1000).toFixed(0) + ' K MAD',        sub: '≈ ' + (ca25/11000).toFixed(0) + ' K EUR',  badge: 'up',      badgeTxt: '▲ ' + evCA + '% vs 2024' },
+    { label: "EBE 2025",         value: (f.ebe[3]/1000).toFixed(0) + ' K MAD',    sub: '11.9 % du CA',                              badge: 'up',      badgeTxt: '▲ Retour positif' },
+    { label: "CAF 2025",         value: (f.caf[3]/1000).toFixed(0) + ' K MAD',    sub: 'Capacité autofinancement',                  badge: 'up',      badgeTxt: '▲ vs 2024' },
+    { label: "Trésorerie",       value: (f.tresorerie[3]/1000).toFixed(0) + ' K MAD', sub: 'Fin 2025',                             badge: 'neutral', badgeTxt: '≈ ' + (f.tresorerie[3]/11000).toFixed(0) + ' K EUR' },
+    { label: "Valeur ajoutée",   value: (f.va[3]/1000).toFixed(0) + ' K MAD',     sub: '2025',                                     badge: 'up',      badgeTxt: '▲ +44.8 % vs 2024' },
+    { label: "Note Booking",     value: '9.7 / 10',   sub: 'Exceptionnel · 100 avis',                                              badge: 'up',      badgeTxt: 'Personnel 9.9' },
+    { label: "Note TripAdvisor", value: '5 / 5 ★',   sub: '#25 / 927 hôtels Marrakech · 772 avis',                                 badge: 'up',      badgeTxt: 'Excellent' },
+    { label: "Prix acquisition", value: '1 300 K€',   sub: 'Immeuble + Fonds de commerce',                                        badge: 'neutral', badgeTxt: '248 m² + piscine' },
   ];
   document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
     <div class="kpi-card" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()">
@@ -549,87 +840,6 @@ function renderKPIs() {
     </div>`).join('');
 }
 
-// ── Tooltip logic
-const tip = document.createElement('div');
-tip.className = 'tooltip-box';
-document.body.appendChild(tip);
-
-function showTip(e, card, isTouch) {
-  const def = DEFINITIONS[card.dataset.key];
-  if (!def) return;
-  tip.innerHTML = `<strong>${def.title}</strong>${def.desc}<div class="formula">${def.formula}</div>`;
-  tip.style.display = 'block';
-  if (isTouch) positionTipTouch(card);
-  else positionTip(e);
-}
-
-// Desktop : suit le curseur
-function positionTip(e) {
-  const x = e.clientX, y = e.clientY;
-  const tw = tip.offsetWidth, th = tip.offsetHeight;
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const margin = 10;
-  let left = x + 16;
-  let top  = y + 16;
-  if (left + tw > vw - margin) left = x - tw - 8;
-  if (left < margin) left = margin;
-  if (top + th > vh - margin) top = y - th - 8;
-  if (top < margin) top = margin;
-  tip.style.left = left + 'px';
-  tip.style.top  = top  + 'px';
-}
-
-// Mobile : centré horizontalement, au-dessus ou en-dessous de la carte
-function positionTipTouch(card) {
-  const vw  = window.innerWidth;
-  const margin = 12;
-  const tw  = Math.min(tip.offsetWidth, vw - margin * 2);
-  tip.style.width = tw + 'px';
-  const th  = tip.offsetHeight;
-  const rect = card.getBoundingClientRect();
-  // centré horizontalement dans la viewport
-  const left = Math.max(margin, (vw - tw) / 2);
-  tip.style.left = left + 'px';
-  // en dessous de la carte si possible, sinon au-dessus
-  const spaceBelow = window.innerHeight - rect.bottom - margin;
-  const spaceAbove = rect.top - margin;
-  if (spaceBelow >= th || spaceBelow >= spaceAbove) {
-    tip.style.top = (rect.bottom + window.scrollY + 8) + 'px';
-  } else {
-    tip.style.top = (rect.top + window.scrollY - th - 8) + 'px';
-  }
-}
-
-function hideTip() {
-  tip.style.display = 'none';
-  tip.style.width = '';
-}
-
-// Souris
-document.addEventListener('mousemove', e => { if (tip.style.display === 'block') positionTip(e); });
-
-// Appui prolongé sur mobile (500ms)
-let _longTimer = null;
-document.addEventListener('touchstart', e => {
-  const card = e.target.closest('.kpi-card');
-  if (!card) { hideTip(); return; }
-  const touch = e.touches[0];
-  _longTimer = setTimeout(() => {
-    if (navigator.vibrate) navigator.vibrate(30);
-    showTip(null, card, true);
-    _longTimer = null;
-  }, 500);
-}, { passive: true });
-
-document.addEventListener('touchend', () => {
-  if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
-}, { passive: true });
-
-document.addEventListener('touchmove', () => {
-  if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
-}, { passive: true });
-
-// ── Tableau financier
 function renderFinTable() {
   const rows = [
     { name: "Chiffre d'affaires", key: 'ca' },
@@ -655,30 +865,218 @@ function renderFinTable() {
     </tr>`).join('');
 }
 
-// ── Graphiques
 function initCharts() {
   const f = FINANCIAL;
   const T = '#8B4513', G = '#C9A227';
-
   new Chart(document.getElementById('chartCA'), {
     type: 'bar',
     data: { labels: f.years, datasets: [{ label: 'CA (MAD)', data: f.ca, backgroundColor: [T+'80',T+'80',T+'80',T], borderColor: T, borderWidth: 2, borderRadius: 6 }] },
     options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
   });
-
-
   new Chart(document.getElementById('chartCharges'), {
     type: 'doughnut',
     data: { labels: f.charges2025.labels, datasets: [{ data: f.charges2025.values, backgroundColor: f.charges2025.colors, borderWidth: 2 }] },
     options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }, cutout: '60%' }
   });
-
   new Chart(document.getElementById('chartVA'), {
     type: 'bar',
     data: { labels: f.years, datasets: [{ label: 'Valeur ajoutée (MAD)', data: f.va, backgroundColor: [G+'60',G+'60',G+'60',G], borderColor: G, borderWidth: 2, borderRadius: 6 }] },
     options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
   });
 }
+
+// ══════════════════════════════════════════════════════════
+// DAR NUM — Données & rendu
+// ══════════════════════════════════════════════════════════
+const FINANCIAL_DN = {
+  ca: 400608,
+  chargesExt: 773509,
+  impots: 599918,
+  personnel: 65415,
+  dotations: 279868,
+  resultatExploitation: -288121,
+  resultatFinancier: -413543,
+  resultatNet: -701580,
+  caf: -421712,        // -701580 + 279868
+  tresorerie: 1040244,
+  terrains: 6122200,
+  constructions: 4185400,
+  mobilier: 1000000,
+  totalActifImmo: 12148045,
+  totalActif: 13619216,
+  compteAssocies: 13696193,
+  chargesData: {
+    labels: ['Charges externes', 'Impôts & taxes (acquisition)', 'Personnel', 'Dotations amort.'],
+    values: [773509, 599918, 65415, 279868],
+    colors: ['#C9A227', '#DC2626', '#3B82F6', '#6B7280']
+  },
+  actifData: {
+    labels: ['Terrains', 'Constructions', 'Mobilier'],
+    values: [6122200, 4185400, 1000000],
+    colors: ['#8B4513', '#A0522D', '#C9A227']
+  }
+};
+
+function renderKPIsDN() {
+  const d = FINANCIAL_DN;
+  const fmt = v => (Math.abs(v)/1000).toFixed(0) + ' K MAD';
+  const fmtEur = v => '≈ ' + (Math.abs(v)/11000).toFixed(0) + ' K€';
+  const kpis = [
+    { label: "CA Dar Num",        value: fmt(d.ca),               sub: fmtEur(d.ca) + ' · Quelques semaines',        badge: 'neutral', badgeTxt: '1ère année partielle',   cls: 'kpi-card-dn' },
+    { label: "Rés. exploitation", value: '(' + fmt(d.resultatExploitation) + ')', sub: '1ère année · démarrage',     badge: 'down',    badgeTxt: '▼ Exceptionnel',         cls: 'kpi-card-dn' },
+    { label: "Résultat net DN",   value: '(' + fmt(d.resultatNet) + ')',          sub: 'Inclut charges d\'acq.',      badge: 'down',    badgeTxt: '▼ Normal année 1',       cls: 'kpi-card-dn' },
+    { label: "CAF DN",            value: '(' + fmt(d.caf) + ')',                  sub: 'Rés. net + Dotations',        badge: 'down',    badgeTxt: '▼ Normalisé',            cls: 'kpi-card-dn' },
+    { label: "Tréso. Dar Num",    value: fmt(d.tresorerie),                       sub: fmtEur(d.tresorerie) + ' fin 2025', badge: 'up',   badgeTxt: '✓ Solide',            cls: 'kpi-card-dn' },
+    { label: "Actif immo DN",     value: (d.totalActifImmo/1000).toFixed(0) + ' K MAD', sub: '≈ 1 104 K€ · 181 m²', badge: 'neutral', badgeTxt: 'Terrains + Constructions', cls: 'kpi-card-dn' },
+    { label: "Prix acq. DN",      value: '1 028 K€',              sub: '11 308 K MAD · 4 sept. 2025',                badge: 'neutral', badgeTxt: 'Immo + mobilier',        cls: 'kpi-card-dn' },
+    { label: "Financement DN",    value: (d.compteAssocies/1000).toFixed(0) + ' K MAD', sub: '≈ 1 245 K€ M-CORP',    badge: 'neutral', badgeTxt: '100% fonds propres',     cls: 'kpi-card-dn' },
+  ];
+  document.getElementById('kpiGridDN').innerHTML = kpis.map(k => `
+    <div class="kpi-card ${k.cls}" data-key="${k.label}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()">
+      <i class="info-icon">i</i>
+      <div class="label">${k.label}</div>
+      <div class="value">${k.value}</div>
+      <div class="sub">${k.sub}</div>
+      <span class="badge ${k.badge}">${k.badgeTxt}</span>
+    </div>`).join('');
+}
+
+function renderFinTableDN() {
+  const d = FINANCIAL_DN;
+  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
+  const fmtE = n => (n >= 0 ? '≈ +' : '≈ ') + (n/11000).toFixed(0) + ' K€';
+  const cls  = n => n >= 0 ? 'positive' : 'negative';
+  const rows = [
+    { name: "Chiffre d'affaires (partiel)", v: d.ca,                   note: "Quelques semaines d'activité" },
+    { name: "Charges externes",             v: -d.chargesExt,          note: "Inclut frais de démarrage" },
+    { name: "Impôts &amp; taxes",           v: -d.impots,              note: "Dont frais enregistrement acq." },
+    { name: "Personnel",                    v: -d.personnel,           note: "Effectif partiel" },
+    { name: "Dotations amortissements",     v: -d.dotations,           note: "Actif immobilisé" },
+    { name: "Résultat d'exploitation",      v: d.resultatExploitation, note: "Avant charges financières" },
+    { name: "Résultat financier",           v: d.resultatFinancier,    note: "Intérêts compte d'associés" },
+    { name: "Résultat net",                 v: d.resultatNet,          note: "Perte 1ère année · attendu" },
+    { name: "CAF",                          v: d.caf,                  note: "= Rés. net + Dotations" },
+    { name: "Trésorerie",                   v: d.tresorerie,           note: "Disponibilités fin 2025" },
+  ];
+  document.getElementById('finTableBodyDN').innerHTML = rows.map(r => `
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td class="${cls(r.v)}">${fmt(r.v)}</td>
+      <td class="${cls(r.v)}">${fmtE(r.v)}</td>
+      <td style="color:var(--text-light);font-size:0.82rem">${r.note}</td>
+    </tr>`).join('');
+}
+
+function initChartsDN() {
+  const d = FINANCIAL_DN;
+  const B = '#1D4ED8';
+
+  // Doughnut charges
+  new Chart(document.getElementById('chartDNCharges'), {
+    type: 'doughnut',
+    data: { labels: d.chargesData.labels, datasets: [{ data: d.chargesData.values, backgroundColor: d.chargesData.colors, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }, cutout: '60%' }
+  });
+
+  // Actif immobilisé bars
+  new Chart(document.getElementById('chartDNActif'), {
+    type: 'bar',
+    data: {
+      labels: d.actifData.labels,
+      datasets: [{ label: 'Valeur (MAD)', data: d.actifData.values, backgroundColor: d.actifData.colors, borderWidth: 2, borderRadius: 6 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1)+'M' } } } }
+  });
+
+  // CA vs Charges grouped bar
+  const totalCharges = d.chargesExt + d.impots + d.personnel + d.dotations;
+  new Chart(document.getElementById('chartDNPerf'), {
+    type: 'bar',
+    data: {
+      labels: ['2025 (1ère année)'],
+      datasets: [
+        { label: 'CA', data: [d.ca], backgroundColor: '#16A34A99', borderColor: '#16A34A', borderWidth: 2, borderRadius: 6 },
+        { label: 'Charges totales', data: [totalCharges], backgroundColor: '#DC262699', borderColor: '#DC2626', borderWidth: 2, borderRadius: 6 }
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' } } } }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// TOOLTIP
+// ══════════════════════════════════════════════════════════
+const tip = document.createElement('div');
+tip.className = 'tooltip-box';
+document.body.appendChild(tip);
+
+function showTip(e, card, isTouch) {
+  const def = DEFINITIONS[card.dataset.key];
+  if (!def) return;
+  tip.innerHTML = `<strong>${def.title}</strong>${def.desc}<div class="formula">${def.formula}</div>`;
+  tip.style.display = 'block';
+  if (isTouch) positionTipTouch(card);
+  else positionTip(e);
+}
+
+function positionTip(e) {
+  const x = e.clientX, y = e.clientY;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const margin = 10;
+  let left = x + 16, top = y + 16;
+  if (left + tw > vw - margin) left = x - tw - 8;
+  if (left < margin) left = margin;
+  if (top + th > vh - margin) top = y - th - 8;
+  if (top < margin) top = margin;
+  tip.style.left = left + 'px';
+  tip.style.top  = top  + 'px';
+}
+
+function positionTipTouch(card) {
+  const vw = window.innerWidth;
+  const margin = 12;
+  const tw = Math.min(tip.offsetWidth, vw - margin * 2);
+  tip.style.width = tw + 'px';
+  const th  = tip.offsetHeight;
+  const rect = card.getBoundingClientRect();
+  const left = Math.max(margin, (vw - tw) / 2);
+  tip.style.left = left + 'px';
+  const spaceBelow = window.innerHeight - rect.bottom - margin;
+  const spaceAbove = rect.top - margin;
+  if (spaceBelow >= th || spaceBelow >= spaceAbove) {
+    tip.style.top = (rect.bottom + window.scrollY + 8) + 'px';
+  } else {
+    tip.style.top = (rect.top + window.scrollY - th - 8) + 'px';
+  }
+}
+
+function hideTip() {
+  tip.style.display = 'none';
+  tip.style.width = '';
+}
+
+document.addEventListener('mousemove', e => { if (tip.style.display === 'block') positionTip(e); });
+
+// Appui prolongé 500ms sur mobile
+let _longTimer = null;
+document.addEventListener('touchstart', e => {
+  const card = e.target.closest('.kpi-card');
+  if (!card) { hideTip(); return; }
+  _longTimer = setTimeout(() => {
+    if (navigator.vibrate) navigator.vibrate(30);
+    showTip(null, card, true);
+    _longTimer = null;
+  }, 500);
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
+}, { passive: true });
+
+document.addEventListener('touchmove', () => {
+  if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
+}, { passive: true });
 
 // ── Init
 document.getElementById('headerDate').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
