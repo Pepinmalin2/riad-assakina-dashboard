@@ -291,6 +291,43 @@
       .prop-detail { font-size: 0.72rem; }
     }
 
+    /* ── ONGLET MOOD BOARD */
+    .tab-btn-mood { }
+    .tab-btn-mood.active { color: var(--terracotta); border-bottom-color: var(--gold); }
+    .tab-btn.tab-btn-mood:hover { color: var(--terracotta); }
+    .mb-category { margin-bottom: 32px; }
+    .mb-category-title {
+      font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--text-light);
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mb-gallery {
+      column-count: 4; column-gap: 12px;
+    }
+    .mb-item {
+      cursor: pointer; overflow: hidden; border-radius: 10px;
+      margin-bottom: 12px; break-inside: avoid;
+      transition: transform .25s, box-shadow .25s;
+      box-shadow: 0 2px 8px rgba(139,69,19,0.10);
+      background: var(--border);
+    }
+    .mb-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(139,69,19,0.18); }
+    .mb-item img { width: 100%; height: auto; display: block; transition: transform .3s; }
+    .mb-item:hover img { transform: scale(1.03); }
+    .mb-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.95); z-index: 300;
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .mb-modal.active { display: flex; }
+    .mb-modal-img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
+    .mb-close { position: absolute; top: 1rem; right: 1rem; color: #fff; font-size: 1.8rem; cursor: pointer; border: none; background: none; padding: .5rem; line-height: 1; }
+    .mb-prev, .mb-next { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 2rem; cursor: pointer; border: none; background: none; padding: 1rem .75rem; }
+    .mb-prev { left: .5rem; } .mb-next { right: .5rem; }
+    @media (max-width: 1024px) { .mb-gallery { column-count: 3; } }
+    @media (max-width: 640px)  { .mb-gallery { column-count: 2; column-gap: 8px; } .mb-item { margin-bottom: 8px; } }
+
     @media (max-width: 768px) {
       header { padding: 0 16px; height: auto; min-height: 60px; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
       .logo-circle { width: 36px; height: 36px; font-size: 14px; }
@@ -350,6 +387,7 @@
     <button class="tab-btn tab-btn-gen active" onclick="switchTab('general', this)">📊 Général</button>
     <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Riad Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
+    <button class="tab-btn tab-btn-mood" onclick="switchTab('moodboard', this)">🎨 Mood Board</button>
   </div>
 </div>
 
@@ -1000,6 +1038,48 @@
 
 </div><!-- /tab-general -->
 
+<!-- ═══════════════════════════════════════════ ONGLET 4 : MOOD BOARD -->
+<div id="tab-moodboard" class="tab-content">
+
+  <div class="prop-banner">
+    <div>
+      <span class="prop-tag">Riad Assakina</span>
+      <span class="prop-detail">Mood Board · Inspirations décoration &amp; ambiances</span>
+    </div>
+    <span class="prop-badge">24 photos · 5 catégories</span>
+  </div>
+
+  <div class="mb-category">
+    <div class="mb-category-title">🏔 Terrasse</div>
+    <div class="mb-gallery" id="mb-terrasse"></div>
+  </div>
+  <div class="mb-category">
+    <div class="mb-category-title">🛏 Chambres</div>
+    <div class="mb-gallery" id="mb-chambres"></div>
+  </div>
+  <div class="mb-category">
+    <div class="mb-category-title">🚿 Salle de Bain</div>
+    <div class="mb-gallery" id="mb-salle-bain"></div>
+  </div>
+  <div class="mb-category">
+    <div class="mb-category-title">🌿 Patio</div>
+    <div class="mb-gallery" id="mb-patio"></div>
+  </div>
+  <div class="mb-category">
+    <div class="mb-category-title">🎨 Couleurs</div>
+    <div class="mb-gallery" id="mb-couleurs"></div>
+  </div>
+
+</div><!-- /tab-moodboard -->
+
+<!-- Modal Mood Board -->
+<div class="mb-modal" id="mbModal">
+  <button class="mb-close" onclick="mbClose()">✕</button>
+  <button class="mb-prev" onclick="mbPrev()">‹</button>
+  <img class="mb-modal-img" id="mbModalImg" src="" alt="">
+  <button class="mb-next" onclick="mbNext()">›</button>
+</div>
+
 </main>
 
 <script>
@@ -1032,6 +1112,7 @@ if (sessionStorage.getItem('ra_auth') === '1') {
 let _assakinaChartsInit = false;
 let _dnInitialized      = false;
 let _genInitialized     = false;
+let _mbInitialized      = false;
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1052,6 +1133,10 @@ function switchTab(tabId, btn) {
     renderFinTableGen();
     initChartsGen();
     _genInitialized = true;
+  }
+  if (tabId === 'moodboard' && !_mbInitialized) {
+    initMoodBoard();
+    _mbInitialized = true;
   }
 }
 
@@ -1395,6 +1480,62 @@ function initChartsGen() {
     }
   });
 }
+
+// ══════════════════════════════════════════════════════════
+// MOOD BOARD
+// ══════════════════════════════════════════════════════════
+const MB_IMGS = {
+  terrasse:   ['Terrasse 1.JPG', ' Terrasse 2.JPG', 'Terrasse 3.JPG', 'Terrasse 4.JPG', 'Terrasse 5.JPG', 'Terrasse 6.JPG', 'Terrasse 7.JPG'],
+  chambres:   ['Chambre 1.JPG', 'Chambre 2.JPG', 'Chambre 3.JPG', 'Chambre 4.JPG', 'Chambre 5.JPG', 'Chambre 6.JPG'],
+  'salle-bain': ['SDB 1.JPG', 'SDB 2.JPG', 'SDB 3.JPG', 'SDB4.JPG', 'SDB 5.JPG'],
+  patio:      ['Patio.JPG', 'Patio 2.JPG', 'Patio 3.JPG', 'Patio 4.JPG', 'Patio 5.JPG'],
+  couleurs:   ['Couleurs.JPG']
+};
+const MB_FOLDERS = { terrasse: 'Terrasse', chambres: 'Chambres', 'salle-bain': 'Salle-de-bain', patio: 'Patio', couleurs: 'Couleurs' };
+let _mb = { cat: '', idx: 0 };
+
+function initMoodBoard() {
+  Object.keys(MB_IMGS).forEach(cat => {
+    const el = document.getElementById('mb-' + cat);
+    MB_IMGS[cat].forEach((file, i) => {
+      const div = document.createElement('div');
+      div.className = 'mb-item';
+      const img = document.createElement('img');
+      img.src = 'images/' + MB_FOLDERS[cat] + '/' + file;
+      img.alt = file;
+      img.loading = 'lazy';
+      div.appendChild(img);
+      div.addEventListener('click', () => mbOpen(cat, i));
+      el.appendChild(div);
+    });
+  });
+}
+
+function mbOpen(cat, idx) {
+  _mb.cat = cat; _mb.idx = idx;
+  document.getElementById('mbModalImg').src = 'images/' + MB_FOLDERS[cat] + '/' + MB_IMGS[cat][idx];
+  document.getElementById('mbModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function mbClose() {
+  document.getElementById('mbModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function mbNext() {
+  _mb.idx = (_mb.idx + 1) % MB_IMGS[_mb.cat].length;
+  document.getElementById('mbModalImg').src = 'images/' + MB_FOLDERS[_mb.cat] + '/' + MB_IMGS[_mb.cat][_mb.idx];
+}
+function mbPrev() {
+  _mb.idx = (_mb.idx - 1 + MB_IMGS[_mb.cat].length) % MB_IMGS[_mb.cat].length;
+  document.getElementById('mbModalImg').src = 'images/' + MB_FOLDERS[_mb.cat] + '/' + MB_IMGS[_mb.cat][_mb.idx];
+}
+document.getElementById('mbModal').addEventListener('click', e => { if (e.target === document.getElementById('mbModal')) mbClose(); });
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('mbModal').classList.contains('active')) return;
+  if (e.key === 'ArrowRight') mbNext();
+  if (e.key === 'ArrowLeft')  mbPrev();
+  if (e.key === 'Escape')     mbClose();
+});
 
 // ══════════════════════════════════════════════════════════
 // TOOLTIP
