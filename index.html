@@ -94,7 +94,11 @@
       max-width: 1400px; margin: 0 auto;
       padding: 0 32px;
       display: flex; gap: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;            /* Firefox */
     }
+    .tab-nav::-webkit-scrollbar { display: none; }   /* Chrome/Safari */
     .tab-btn {
       padding: 14px 28px;
       background: none; border: none; cursor: pointer;
@@ -104,6 +108,7 @@
       margin-bottom: -2px;
       transition: color .2s, border-color .2s;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .tab-btn:hover { color: var(--terracotta); }
     .tab-btn.active { color: var(--terracotta); border-bottom-color: var(--gold); }
