@@ -332,6 +332,8 @@
     .mb-prev { left: .5rem; } .mb-next { right: .5rem; }
     @media (max-width: 1024px) { .mb-gallery { column-count: 3; } }
     @media (max-width: 640px)  { .mb-gallery { column-count: 2; column-gap: 8px; } .mb-item { margin-bottom: 8px; } }
+    /* Chambres : 6 photos -> 3 colonnes sur desktop pour un remplissage equilibre 2-2-2 (evite les colonnes a moitie vides) */
+    @media (min-width: 1025px) { #mb-chambres { column-count: 3; } }
 
     @media (max-width: 768px) {
       header { padding: 0 16px; height: auto; min-height: 60px; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
