@@ -1374,7 +1374,7 @@ function renderFinTable() {
     { name: "Trésorerie",        key: 'tresorerie' },
     { name: "Valeur ajoutée",    key: 'va' },
   ];
-  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
+  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '-' + Math.abs(n).toLocaleString('fr-FR');
   const cls  = n => n >= 0 ? 'positive' : 'negative';
   const evol = (a, b) => {
     if (!a) return '—';
@@ -1475,8 +1475,8 @@ function renderKPIsDN() {
   const evCA = '▲ ×3 annualisé';
   const kpis = [
     { label: "CA Dar Num",      value: fmt(ca25),                     sub: '≈ ' + (ca25/11000).toFixed(0) + ' K€ · 4 mois (sept.–déc.)', badge: 'up',      badgeTxt: evCA,                         cls: 'kpi-card-dn' },
-    { label: "EBE Dar Num",     value: '(' + fmt(d.ebe) + ')',        sub: '≈ 0 · hors charges acquisition',                             badge: 'neutral', badgeTxt: 'Opérationnel quasi-nul',     cls: 'kpi-card-dn' },
-    { label: "CAF Dar Num",     value: '(' + fmt(d.caf) + ')',        sub: 'Dont charges fin. 414 K MAD',                                badge: 'down',    badgeTxt: '▼ Normal année 1',           cls: 'kpi-card-dn' },
+    { label: "EBE Dar Num",     value: '-' + fmt(Math.abs(d.ebe)),    sub: '≈ 0 · hors charges acquisition',                             badge: 'neutral', badgeTxt: 'Opérationnel quasi-nul',     cls: 'kpi-card-dn' },
+    { label: "CAF Dar Num",     value: '-' + fmt(Math.abs(d.caf)),    sub: 'Dont charges fin. 414 K MAD',                                badge: 'down',    badgeTxt: '▼ Normal année 1',           cls: 'kpi-card-dn' },
     { label: "Tréso. Dar Num",  value: fmt(d.tresorerie),             sub: '≈ ' + (d.tresorerie/11000).toFixed(0) + ' K€ · Fin 2025',   badge: 'up',      badgeTxt: '✓ Solide',                   cls: 'kpi-card-dn' },
     { label: "VA Dar Num",      value: fmt(d.va),                     sub: 'Estimée hors charges acq.',                                  badge: 'neutral', badgeTxt: '≈ ' + (d.va/11000).toFixed(0) + ' K€', cls: 'kpi-card-dn' },
     { label: "Note Airbnb DN",  value: '5.0 / 5 ★',                  sub: 'Exceptionnel · 98 avis',                                     badge: 'up',      badgeTxt: '▲ Note parfaite',            cls: 'kpi-card-dn' },
@@ -1503,8 +1503,8 @@ function renderFinTableDN() {
     { name: "Trésorerie",        key: 'tresorerie',   note: "Fin 2025" },
     { name: "Valeur ajoutée",    key: 'va',           note: "Estimée hors charges d'acquisition" },
   ];
-  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
-  const fmtE = n => n >= 0 ? '≈ +' + Math.round(n/11000) + ' K€' : '≈ (' + Math.round(Math.abs(n)/11000) + ' K€)';
+  const fmt  = n => n >= 0 ? n.toLocaleString('fr-FR') : '-' + Math.abs(n).toLocaleString('fr-FR');
+  const fmtE = n => n >= 0 ? '≈ +' + Math.round(n/11000) + ' K€' : '≈ -' + Math.round(Math.abs(n)/11000) + ' K€';
   const cls  = n => n >= 0 ? 'positive' : 'negative';
   document.getElementById('finTableBodyDN').innerHTML = rows.map(r => `
     <tr>
@@ -1567,7 +1567,7 @@ function renderFinTableGen() {
   const a  = FINANCIAL;
   const d  = FINANCIAL_DN;
   const g  = FINANCIAL_GEN;
-  const fmt = n => n >= 0 ? n.toLocaleString('fr-FR') : '(' + Math.abs(n).toLocaleString('fr-FR') + ')';
+  const fmt = n => n >= 0 ? n.toLocaleString('fr-FR') : '-' + Math.abs(n).toLocaleString('fr-FR');
   const cls = n => n >= 0 ? 'positive' : 'negative';
   const rows = [
     { name: "Chiffre d'affaires", av: a.ca[3],          dn: d.ca,            total: g.caConsolide,    note: "DN = 4 mois · annualisé ~2 330 K MAD" },
