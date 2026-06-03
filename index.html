@@ -377,10 +377,18 @@
       font-size: 0.62rem; font-weight: 600; padding: 2px 4px;
       border-radius: 4px; margin-top: 2px;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      background: var(--terracotta); color: white;
     }
-    .cal-res-cont { background: var(--terracotta-light); color: white; }
+    /* Dar Num — amber */
+    .cal-res-dn      { background: #D97706; color: white; }
+    .cal-res-dn-cont { background: #F59E0B; color: white; }
+    /* Assakina — terracotta */
+    .cal-res-as      { background: #8B4513; color: white; }
+    .cal-res-as-cont { background: #A0522D; color: white; }
     .cal-blocked { background: #E5E7EB; color: #9CA3AF; }
+    /* Légende */
+    .cal-legend { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .cal-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: var(--text); }
+    .cal-legend-dot  { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
     .cal-upcoming { margin-top: 24px; }
     .cal-upcoming-title { font-size: 0.82rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
     .cal-res-item {
@@ -1123,6 +1131,12 @@
     <span class="prop-badge" id="cal-status">Chargement…</span>
   </div>
 
+  <div class="cal-legend">
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#D97706"></div>Dar Num</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#8B4513"></div>Riad Assakina</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#E5E7EB;border:1px solid #ccc"></div>Bloqué</div>
+  </div>
+
   <div class="cal-header">
     <div class="cal-title" id="cal-month-label">—</div>
     <div class="cal-nav">
@@ -1594,31 +1608,39 @@ function initChartsGen() {
 // ══════════════════════════════════════════════════════════
 // CALENDRIER — iCal Airbnb Dar Num
 // ══════════════════════════════════════════════════════════
-const AIRBNB_ICAL = 'https://www.airbnb.fr/calendar/ical/734016384586290594.ics?t=f0132a0b8db74ee79f67e93aa267d1f0';
+const CAL_SOURCES = [
+  { prop: 'dn', label: 'Dar Num',        url: 'https://www.airbnb.fr/calendar/ical/734016384586290594.ics?t=f0132a0b8db74ee79f67e93aa267d1f0' },
+  { prop: 'as', label: 'Riad Assakina',  url: null }, // à brancher dès que l'iCal Assakina est disponible
+];
 let _calEvents = [];
 let _calViewDate = new Date();
 
+async function fetchIcalText(url) {
+  const proxies = ['https://corsproxy.io/?url=', 'https://api.allorigins.win/raw?url='];
+  for (const proxy of proxies) {
+    try {
+      const res = await fetch(proxy + encodeURIComponent(url));
+      if (res.ok) return await res.text();
+    } catch(e) { /* essayer le suivant */ }
+  }
+  return null;
+}
+
 async function initCalendar() {
   try {
-    const proxies = [
-      'https://corsproxy.io/?url=',
-      'https://api.allorigins.win/raw?url='
-    ];
-    let text = null;
-    for (const proxy of proxies) {
-      try {
-        const res = await fetch(proxy + encodeURIComponent(AIRBNB_ICAL));
-        if (res.ok) { text = await res.text(); break; }
-      } catch(e) { /* essayer le suivant */ }
-    }
-    if (!text) throw new Error('Impossible de récupérer le calendrier');
-    _calEvents = parseIcal(text);
-    document.getElementById('cal-status').textContent = _calEvents.length + ' événements chargés';
+    const results = await Promise.all(
+      CAL_SOURCES.filter(s => s.url).map(async s => {
+        const text = await fetchIcalText(s.url);
+        return text ? parseIcal(text, s.prop) : [];
+      })
+    );
+    _calEvents = results.flat().sort((a,b) => a.start - b.start);
+    document.getElementById('cal-status').textContent = _calEvents.filter(e=>!e.isBlocked).length + ' réservations';
     renderCalendar(_calViewDate);
     renderUpcoming();
   } catch(e) {
     document.getElementById('cal-status').textContent = '⚠ Erreur de connexion';
-    document.getElementById('cal-grid').innerHTML = '<div class="cal-loading" style="grid-column:1/-1">Impossible de charger le calendrier Airbnb.<br>Vérifiez votre connexion.</div>';
+    document.getElementById('cal-grid').innerHTML = '<div class="cal-loading" style="grid-column:1/-1">Impossible de charger le calendrier.<br>Vérifiez votre connexion.</div>';
   }
 }
 
@@ -1626,7 +1648,7 @@ function parseIcalDate(s) {
   return new Date(+s.slice(0,4), +s.slice(4,6)-1, +s.slice(6,8));
 }
 
-function parseIcal(text) {
+function parseIcal(text, prop) {
   const events = [];
   text.split('BEGIN:VEVENT').slice(1).forEach(block => {
     const sm = block.match(/DTSTART[^:]*:(\d{8})/);
@@ -1635,12 +1657,12 @@ function parseIcal(text) {
     if (!sm || !em) return;
     const start = parseIcalDate(sm[1]);
     const end   = parseIcalDate(em[1]);
-    end.setDate(end.getDate() - 1); // iCal DTEND est exclusif
+    end.setDate(end.getDate() - 1);
     const summary = (nm ? nm[1] : 'Réservation').replace(/\r/g,'').trim();
     const isBlocked = /not available|airbnb \(not available\)/i.test(summary);
-    events.push({ start, end, summary, isBlocked });
+    events.push({ start, end, summary, isBlocked, prop });
   });
-  return events.sort((a,b) => a.start - b.start);
+  return events;
 }
 
 function dateKey(d) { return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(); }
@@ -1686,7 +1708,8 @@ function renderCalendar(date) {
       if (dayDate < ev.start || dayDate > ev.end) return;
       const bar = document.createElement('div');
       const isFirst = dayDate.getTime() === ev.start.getTime() || d === 1;
-      bar.className = 'cal-res' + (isFirst ? '' : ' cal-res-cont');
+      const colorClass = isFirst ? 'cal-res-' + ev.prop : 'cal-res-' + ev.prop + '-cont';
+      bar.className = 'cal-res ' + colorClass;
       bar.textContent = isFirst ? ev.summary.split('(')[0].trim().split(' ')[0] : '';
       bar.title = ev.summary + '\n' + ev.start.toLocaleDateString('fr-FR') + ' → ' + ev.end.toLocaleDateString('fr-FR');
       el.appendChild(bar);
@@ -1703,13 +1726,15 @@ function renderUpcoming() {
     .slice(0, 8);
   const list = document.getElementById('cal-upcoming-list');
   if (!upcoming.length) { list.innerHTML = '<div style="color:var(--text-light);font-size:.85rem">Aucune réservation à venir</div>'; return; }
+  const propLabel = { dn: 'Dar Num', as: 'Riad Assakina' };
+  const propColor = { dn: '#D97706', as: '#8B4513' };
   list.innerHTML = upcoming.map(ev => {
     const nights = Math.round((ev.end - ev.start) / 86400000) + 1;
     return `<div class="cal-res-item">
-      <div class="cal-res-dot"></div>
-      <div>
+      <div class="cal-res-dot" style="background:${propColor[ev.prop]}"></div>
+      <div style="flex:1">
         <div class="cal-res-name">${ev.summary.split('(')[0].trim()}</div>
-        <div class="cal-res-dates">${ev.start.toLocaleDateString('fr-FR')} → ${ev.end.toLocaleDateString('fr-FR')}</div>
+        <div class="cal-res-dates">${ev.start.toLocaleDateString('fr-FR')} → ${ev.end.toLocaleDateString('fr-FR')} · <strong>${propLabel[ev.prop]}</strong></div>
       </div>
       <span class="cal-res-nights">${nights} nuit${nights>1?'s':''}</span>
     </div>`;
