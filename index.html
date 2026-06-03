@@ -1695,19 +1695,24 @@ function parseIcal(text, prop) {
     const summary = (nm ? nm[1] : 'Réservation').replace(/\r/g,'').trim();
     const isBlocked = /not available|airbnb \(not available\)/i.test(summary);
 
-    // Extraire prénom et nombre de voyageurs depuis le SUMMARY
-    // Format Airbnb : "Caroline (2 guests)" ou "Caroline"
-    const guestMatch = summary.match(/^(.+?)\s*\((\d+)/);
-    const name   = guestMatch ? guestMatch[1].trim() : summary.split('(')[0].trim();
-    const guests = guestMatch ? parseInt(guestMatch[2]) : null;
+    // Unfold les lignes iCal (continuation avec espace)
+    const unfolded = block.replace(/\r?\n[ \t]/g, '');
 
-    // Extraire infos supplémentaires depuis DESCRIPTION
-    const descM = block.match(/DESCRIPTION:([\s\S]*?)(?:\r?\n[A-Z])/);
-    const desc  = descM ? descM[1].replace(/\\n/g, '\n').replace(/\r/g, '') : '';
-    const codeM = desc.match(/Confirmation code[:\s]+([A-Z0-9]+)/i);
+    // Extraire DESCRIPTION (contient URL réservation + téléphone)
+    const descM = unfolded.match(/DESCRIPTION:(.*?)(?:\r?\n[A-Z]|$)/s);
+    const desc  = descM ? descM[1].replace(/\\n/g, '\n').replace(/\r/g,'') : '';
+
+    // Code de confirmation depuis l'URL Airbnb
+    const codeM = desc.match(/reservations\/details\/([A-Z0-9]+)/i);
     const confCode = codeM ? codeM[1] : null;
 
-    events.push({ start, end, summary, name, guests, confCode, isBlocked, prop });
+    // 4 derniers chiffres du téléphone
+    const phoneM = desc.match(/Last 4 Digits\)[:\s]+(\d{4})/i);
+    const phone4 = phoneM ? phoneM[1] : null;
+
+    const name = confCode || 'Réservation';
+
+    events.push({ start, end, summary, name, guests: null, confCode, phone4, isBlocked, prop });
   });
   return events;
 }
@@ -1777,17 +1782,17 @@ function renderUpcoming() {
   const propColor = { dn: '#D97706', as: '#8B4513' };
   list.innerHTML = upcoming.map(ev => {
     const nights = Math.round((ev.end - ev.start) / 86400000) + 1;
-    const guestInfo = ev.guests ? `<span class="cal-res-nights" style="background:#EFF6FF;color:#1D4ED8">${ev.guests} voyageur${ev.guests > 1 ? 's' : ''}</span>` : '';
-    const codeInfo  = ev.confCode ? `<span style="font-size:0.7rem;color:var(--text-light);margin-left:4px">${ev.confCode}</span>` : '';
+    const phoneInfo = ev.phone4 ? `<span class="cal-res-nights" style="background:#EFF6FF;color:#1D4ED8">📞 ••••${ev.phone4}</span>` : '';
+    const linkInfo  = ev.confCode ? `<a href="https://www.airbnb.com/hosting/reservations/details/${ev.confCode}" target="_blank" style="font-size:0.7rem;color:var(--terracotta);margin-left:4px;text-decoration:none">🔗 ${ev.confCode}</a>` : '';
     return `<div class="cal-res-item">
       <div class="cal-res-dot" style="background:${propColor[ev.prop]}"></div>
       <div style="flex:1">
-        <div class="cal-res-name">${ev.name}${codeInfo}</div>
+        <div class="cal-res-name">Réservation${linkInfo}</div>
         <div class="cal-res-dates">${ev.start.toLocaleDateString('fr-FR')} → ${ev.end.toLocaleDateString('fr-FR')} · <strong>${propLabel[ev.prop]}</strong></div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <span class="cal-res-nights">${nights} nuit${nights > 1 ? 's' : ''}</span>
-        ${guestInfo}
+        ${phoneInfo}
       </div>
     </div>`;
   }).join('');
