@@ -306,11 +306,12 @@
       border-bottom: 1px solid var(--border);
     }
     .mb-gallery {
-      column-count: 4; column-gap: 12px;
+      position: relative;
+      width: 100%;
     }
     .mb-item {
+      position: absolute;
       cursor: pointer; overflow: hidden; border-radius: 10px;
-      margin-bottom: 12px; break-inside: avoid;
       transition: transform .25s, box-shadow .25s;
       box-shadow: 0 2px 8px rgba(139,69,19,0.10);
       background: var(--border);
@@ -328,8 +329,6 @@
     .mb-close { position: absolute; top: 1rem; right: 1rem; color: #fff; font-size: 1.8rem; cursor: pointer; border: none; background: none; padding: .5rem; line-height: 1; }
     .mb-prev, .mb-next { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 2rem; cursor: pointer; border: none; background: none; padding: 1rem .75rem; }
     .mb-prev { left: .5rem; } .mb-next { right: .5rem; }
-    @media (max-width: 1024px) { .mb-gallery { column-count: 3; } }
-    @media (max-width: 640px)  { .mb-gallery { column-count: 2; column-gap: 8px; } .mb-item { margin-bottom: 8px; } }
     /* Chambres : 6 photos -> 3 colonnes sur desktop pour un remplissage equilibre 2-2-2 (evite les colonnes a moitie vides) */
     @media (min-width: 1025px) { #mb-chambres { column-count: 3; } }
 
@@ -1499,7 +1498,34 @@ const MB_IMGS = {
 const MB_FOLDERS = { terrasse: 'Terrasse', chambres: 'Chambres', 'salle-bain': 'Salle-de-bain', patio: 'Patio', couleurs: 'Couleurs' };
 let _mb = { cat: '', idx: 0 };
 
+function mbColCount() {
+  if (window.innerWidth <= 640)  return 2;
+  if (window.innerWidth <= 1024) return 3;
+  return 4;
+}
+
+function mbLayout(galleryId) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return;
+  const items  = Array.from(gallery.querySelectorAll('.mb-item'));
+  if (!items.length) return;
+  const gap    = 12;
+  const cols   = mbColCount();
+  const total  = gallery.offsetWidth;
+  const colW   = (total - gap * (cols - 1)) / cols;
+  const heights = new Array(cols).fill(0);
+  items.forEach(item => {
+    const c = heights.indexOf(Math.min(...heights));
+    item.style.width  = colW + 'px';
+    item.style.left   = (c * (colW + gap)) + 'px';
+    item.style.top    = heights[c] + 'px';
+    heights[c] += item.offsetHeight + gap;
+  });
+  gallery.style.height = Math.max(...heights) + 'px';
+}
+
 function initMoodBoard() {
+  const allImgs = [];
   Object.keys(MB_IMGS).forEach(cat => {
     const el = document.getElementById('mb-' + cat);
     MB_IMGS[cat].forEach((file, i) => {
@@ -1508,11 +1534,32 @@ function initMoodBoard() {
       const img = document.createElement('img');
       img.src = 'images/' + MB_FOLDERS[cat] + '/' + file;
       img.alt = file;
-      img.loading = 'lazy';
       div.appendChild(img);
       div.addEventListener('click', () => mbOpen(cat, i));
       el.appendChild(div);
+      allImgs.push({ img, galleryId: 'mb-' + cat });
     });
+  });
+
+  // Déclenche le layout de chaque galerie dès que ses images sont chargées
+  const galleryCounts = {};
+  const galleryLoaded = {};
+  allImgs.forEach(({ img, galleryId }) => {
+    galleryCounts[galleryId] = (galleryCounts[galleryId] || 0) + 1;
+    galleryLoaded[galleryId] = galleryLoaded[galleryId] || 0;
+    const check = () => {
+      galleryLoaded[galleryId]++;
+      if (galleryLoaded[galleryId] === galleryCounts[galleryId]) {
+        mbLayout(galleryId);
+      }
+    };
+    if (img.complete) check();
+    else { img.onload = check; img.onerror = check; }
+  });
+
+  // Recalcule au redimensionnement
+  window.addEventListener('resize', () => {
+    Object.keys(MB_IMGS).forEach(cat => mbLayout('mb-' + cat));
   });
 }
 
