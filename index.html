@@ -1665,6 +1665,7 @@ document.addEventListener('touchmove', () => {
 }, { passive: true });
 
 // ── Init
+window.scrollTo(0, 0);
 document.getElementById('headerDate').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 // Assakina : DOM tables (pas les charts — lazy au clic)
 renderKPIs();
