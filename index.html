@@ -402,6 +402,16 @@
     .cal-res-dates { font-size: 0.78rem; color: var(--text-light); }
     .cal-res-nights { font-size: 0.75rem; background: #FEF3C7; color: #92400E; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
     .cal-loading { text-align: center; padding: 40px; color: var(--text-light); font-size: 0.88rem; }
+    /* Jauge taux de remplissage */
+    .cal-occ-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0; }
+    .cal-occ-card { background: var(--card-bg); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+    .cal-occ-month { font-size: 0.78rem; font-weight: 700; text-transform: capitalize; color: var(--text-light); margin-bottom: 10px; letter-spacing: .3px; }
+    .cal-occ-rate  { font-size: 1.8rem; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+    .cal-occ-bar-wrap { background: var(--border); border-radius: 20px; height: 8px; overflow: hidden; margin-bottom: 6px; }
+    .cal-occ-bar  { height: 100%; border-radius: 20px; transition: width .6s ease; }
+    .cal-occ-sub  { font-size: 0.72rem; color: var(--text-light); }
+    @media (max-width: 640px) { .cal-occ-wrap { grid-template-columns: 1fr; gap: 8px; } }
+
     /* Disponibilités */
     .cal-avail-item {
       display: flex; align-items: center; gap: 12px;
@@ -1160,6 +1170,11 @@
     <div class="cal-loading" style="grid-column:1/-1">Synchronisation avec Airbnb…</div>
   </div>
 
+  <div class="cal-upcoming" style="margin-top:24px">
+    <div class="cal-upcoming-title">Taux de remplissage</div>
+    <div class="cal-occ-wrap" id="cal-occupancy"></div>
+  </div>
+
   <div class="cal-upcoming">
     <div class="cal-upcoming-title">Prochaines réservations</div>
     <div id="cal-upcoming-list"></div>
@@ -1653,6 +1668,7 @@ async function initCalendar() {
     _calEvents = results.flat().sort((a,b) => a.start - b.start);
     document.getElementById('cal-status').textContent = _calEvents.filter(e=>!e.isBlocked).length + ' réservations';
     renderCalendar(_calViewDate);
+    renderOccupancy();
     renderUpcoming();
     renderAvailabilities();
   } catch(e) {
@@ -1754,6 +1770,38 @@ function renderUpcoming() {
         <div class="cal-res-dates">${ev.start.toLocaleDateString('fr-FR')} → ${ev.end.toLocaleDateString('fr-FR')} · <strong>${propLabel[ev.prop]}</strong></div>
       </div>
       <span class="cal-res-nights">${nights} nuit${nights>1?'s':''}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderOccupancy() {
+  const today = new Date();
+  const el = document.getElementById('cal-occupancy');
+  if (!el) return;
+
+  const months = [0, 1, 2].map(offset => {
+    const d = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+    return { year: d.getFullYear(), month: d.getMonth() };
+  });
+
+  el.innerHTML = months.map(({ year, month }) => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    let reserved = 0;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(year, month, d);
+      if (_calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end)) reserved++;
+    }
+    const rate = Math.round(reserved / daysInMonth * 100);
+    const label = new Date(year, month, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const color = rate >= 75 ? '#16A34A' : rate >= 45 ? '#D97706' : '#DC2626';
+    const mention = rate >= 75 ? 'Excellent' : rate >= 45 ? 'Correct' : 'Faible';
+    return `<div class="cal-occ-card">
+      <div class="cal-occ-month">${label}</div>
+      <div class="cal-occ-rate" style="color:${color}">${rate} %</div>
+      <div class="cal-occ-bar-wrap">
+        <div class="cal-occ-bar" style="width:${rate}%;background:${color}"></div>
+      </div>
+      <div class="cal-occ-sub">${reserved} / ${daysInMonth} nuits · ${mention}</div>
     </div>`;
   }).join('');
 }
