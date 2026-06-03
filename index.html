@@ -332,6 +332,75 @@
     /* Chambres : 6 photos -> 3 colonnes sur desktop pour un remplissage equilibre 2-2-2 (evite les colonnes a moitie vides) */
     @media (min-width: 1025px) { #mb-chambres { column-count: 3; } }
 
+    /* ── ONGLET CALENDRIER */
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .cal-title   { font-size: 1.15rem; font-weight: 700; color: var(--terracotta); text-transform: capitalize; }
+    .cal-nav     { display: flex; gap: 8px; align-items: center; }
+    .cal-nav-btn {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 6px 14px; cursor: pointer;
+      font-size: 1rem; color: var(--text-light);
+      transition: background .15s, color .15s;
+    }
+    .cal-nav-btn:hover { background: var(--terracotta); color: white; border-color: var(--terracotta); }
+    .cal-today-btn {
+      background: var(--gold); color: #3D1A08; border: none;
+      border-radius: 8px; padding: 6px 14px; cursor: pointer;
+      font-size: 0.8rem; font-weight: 700;
+      transition: background .15s;
+    }
+    .cal-today-btn:hover { background: #E8C547; }
+    .cal-status { font-size: 0.8rem; color: var(--text-light); font-style: italic; }
+    .cal-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 3px; background: var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .cal-day-header {
+      text-align: center; padding: 10px 4px;
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--text-light); text-transform: uppercase; letter-spacing: .5px;
+      background: var(--card-bg);
+    }
+    .cal-day {
+      min-height: 72px; background: var(--card-bg);
+      padding: 5px 4px; position: relative;
+    }
+    .cal-day-empty { background: #FAF7F4; }
+    .cal-today { background: #FFF8E7 !important; }
+    .cal-day-num {
+      font-size: 0.75rem; font-weight: 600; color: var(--text-light);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; margin-bottom: 3px;
+    }
+    .cal-today .cal-day-num { background: var(--gold); color: #3D1A08; font-weight: 800; }
+    .cal-res {
+      font-size: 0.62rem; font-weight: 600; padding: 2px 4px;
+      border-radius: 4px; margin-top: 2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      background: var(--terracotta); color: white;
+    }
+    .cal-res-cont { background: var(--terracotta-light); color: white; }
+    .cal-blocked { background: #E5E7EB; color: #9CA3AF; }
+    .cal-upcoming { margin-top: 24px; }
+    .cal-upcoming-title { font-size: 0.82rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+    .cal-res-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--card-bg); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 8px;
+      box-shadow: var(--shadow);
+    }
+    .cal-res-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--terracotta); flex-shrink: 0; }
+    .cal-res-name { font-weight: 700; font-size: 0.88rem; flex: 1; }
+    .cal-res-dates { font-size: 0.78rem; color: var(--text-light); }
+    .cal-res-nights { font-size: 0.75rem; background: #FEF3C7; color: #92400E; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+    .cal-loading { text-align: center; padding: 40px; color: var(--text-light); font-size: 0.88rem; }
+    @media (max-width: 640px) {
+      .cal-day { min-height: 52px; padding: 3px 2px; }
+      .cal-day-num { width: 18px; height: 18px; font-size: 0.65rem; }
+      .cal-res { font-size: 0.55rem; padding: 1px 3px; }
+      .cal-day-header { padding: 7px 2px; font-size: 0.62rem; }
+    }
+
     @media (max-width: 768px) {
       header { padding: 0 16px; height: auto; min-height: 60px; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
       .logo-circle { width: 36px; height: 36px; font-size: 14px; }
@@ -389,9 +458,10 @@
 <div class="tab-nav-wrap">
   <div class="tab-nav">
     <button class="tab-btn tab-btn-gen active" onclick="switchTab('general', this)">📊 Général</button>
-    <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Riad Assakina</button>
+    <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
-    <button class="tab-btn tab-btn-mood" onclick="switchTab('moodboard', this)">🎨 Mood Board</button>
+    <button class="tab-btn" onclick="switchTab('calendrier', this)">🗓 Calendrier</button>
+    <button class="tab-btn tab-btn-mood" onclick="switchTab('moodboard', this)">🎨 Photos</button>
   </div>
 </div>
 
@@ -1042,7 +1112,38 @@
 
 </div><!-- /tab-general -->
 
-<!-- ═══════════════════════════════════════════ ONGLET 4 : MOOD BOARD -->
+<!-- ═══════════════════════════════════════════ ONGLET 4 : CALENDRIER -->
+<div id="tab-calendrier" class="tab-content">
+
+  <div class="prop-banner prop-banner-darnum">
+    <div>
+      <span class="prop-tag prop-tag-dn">Dar Num — Réservations Airbnb</span>
+      <span class="prop-detail">Calendrier en temps réel · synchronisé avec Airbnb</span>
+    </div>
+    <span class="prop-badge" id="cal-status">Chargement…</span>
+  </div>
+
+  <div class="cal-header">
+    <div class="cal-title" id="cal-month-label">—</div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+      <button class="cal-today-btn" onclick="calToday()">Aujourd'hui</button>
+      <button class="cal-nav-btn" onclick="calNext()">›</button>
+    </div>
+  </div>
+
+  <div class="cal-grid" id="cal-grid">
+    <div class="cal-loading" style="grid-column:1/-1">Synchronisation avec Airbnb…</div>
+  </div>
+
+  <div class="cal-upcoming">
+    <div class="cal-upcoming-title">Prochaines réservations</div>
+    <div id="cal-upcoming-list"></div>
+  </div>
+
+</div><!-- /tab-calendrier -->
+
+<!-- ═══════════════════════════════════════════ ONGLET 5 : MOOD BOARD -->
 <div id="tab-moodboard" class="tab-content">
 
   <div class="prop-banner">
@@ -1116,6 +1217,7 @@ if (sessionStorage.getItem('ra_auth') === '1') {
 let _assakinaChartsInit = false;
 let _dnInitialized      = false;
 let _genInitialized     = false;
+let _calInitialized     = false;
 let _mbInitialized      = false;
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -1137,6 +1239,10 @@ function switchTab(tabId, btn) {
     renderFinTableGen();
     initChartsGen();
     _genInitialized = true;
+  }
+  if (tabId === 'calendrier' && !_calInitialized) {
+    initCalendar();
+    _calInitialized = true;
   }
   if (tabId === 'moodboard' && !_mbInitialized) {
     initMoodBoard();
@@ -1484,6 +1590,135 @@ function initChartsGen() {
     }
   });
 }
+
+// ══════════════════════════════════════════════════════════
+// CALENDRIER — iCal Airbnb Dar Num
+// ══════════════════════════════════════════════════════════
+const AIRBNB_ICAL = 'https://www.airbnb.fr/calendar/ical/734016384586290594.ics?t=f0132a0b8db74ee79f67e93aa267d1f0';
+let _calEvents = [];
+let _calViewDate = new Date();
+
+async function initCalendar() {
+  try {
+    const proxies = [
+      'https://corsproxy.io/?url=',
+      'https://api.allorigins.win/raw?url='
+    ];
+    let text = null;
+    for (const proxy of proxies) {
+      try {
+        const res = await fetch(proxy + encodeURIComponent(AIRBNB_ICAL));
+        if (res.ok) { text = await res.text(); break; }
+      } catch(e) { /* essayer le suivant */ }
+    }
+    if (!text) throw new Error('Impossible de récupérer le calendrier');
+    _calEvents = parseIcal(text);
+    document.getElementById('cal-status').textContent = _calEvents.length + ' événements chargés';
+    renderCalendar(_calViewDate);
+    renderUpcoming();
+  } catch(e) {
+    document.getElementById('cal-status').textContent = '⚠ Erreur de connexion';
+    document.getElementById('cal-grid').innerHTML = '<div class="cal-loading" style="grid-column:1/-1">Impossible de charger le calendrier Airbnb.<br>Vérifiez votre connexion.</div>';
+  }
+}
+
+function parseIcalDate(s) {
+  return new Date(+s.slice(0,4), +s.slice(4,6)-1, +s.slice(6,8));
+}
+
+function parseIcal(text) {
+  const events = [];
+  text.split('BEGIN:VEVENT').slice(1).forEach(block => {
+    const sm = block.match(/DTSTART[^:]*:(\d{8})/);
+    const em = block.match(/DTEND[^:]*:(\d{8})/);
+    const nm = block.match(/SUMMARY:(.*)/);
+    if (!sm || !em) return;
+    const start = parseIcalDate(sm[1]);
+    const end   = parseIcalDate(em[1]);
+    end.setDate(end.getDate() - 1); // iCal DTEND est exclusif
+    const summary = (nm ? nm[1] : 'Réservation').replace(/\r/g,'').trim();
+    const isBlocked = /not available|airbnb \(not available\)/i.test(summary);
+    events.push({ start, end, summary, isBlocked });
+  });
+  return events.sort((a,b) => a.start - b.start);
+}
+
+function dateKey(d) { return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(); }
+
+function renderCalendar(date) {
+  const year = date.getFullYear(), month = date.getMonth();
+  document.getElementById('cal-month-label').textContent =
+    new Date(year, month, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // En-têtes jours
+  ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-header'; el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  // Cellules vides avant le 1er
+  const firstDay = new Date(year, month, 1);
+  const offset = (firstDay.getDay() + 6) % 7;
+  for (let i = 0; i < offset; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day cal-day-empty';
+    grid.appendChild(el);
+  }
+
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dayDate = new Date(year, month, d);
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    if (dayDate.getTime() === today.getTime()) el.classList.add('cal-today');
+
+    const num = document.createElement('span');
+    num.className = 'cal-day-num'; num.textContent = d;
+    el.appendChild(num);
+
+    _calEvents.forEach(ev => {
+      if (ev.isBlocked) return;
+      if (dayDate < ev.start || dayDate > ev.end) return;
+      const bar = document.createElement('div');
+      const isFirst = dayDate.getTime() === ev.start.getTime() || d === 1;
+      bar.className = 'cal-res' + (isFirst ? '' : ' cal-res-cont');
+      bar.textContent = isFirst ? ev.summary.split('(')[0].trim().split(' ')[0] : '';
+      bar.title = ev.summary + '\n' + ev.start.toLocaleDateString('fr-FR') + ' → ' + ev.end.toLocaleDateString('fr-FR');
+      el.appendChild(bar);
+    });
+
+    grid.appendChild(el);
+  }
+}
+
+function renderUpcoming() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const upcoming = _calEvents
+    .filter(ev => !ev.isBlocked && ev.end >= today)
+    .slice(0, 8);
+  const list = document.getElementById('cal-upcoming-list');
+  if (!upcoming.length) { list.innerHTML = '<div style="color:var(--text-light);font-size:.85rem">Aucune réservation à venir</div>'; return; }
+  list.innerHTML = upcoming.map(ev => {
+    const nights = Math.round((ev.end - ev.start) / 86400000) + 1;
+    return `<div class="cal-res-item">
+      <div class="cal-res-dot"></div>
+      <div>
+        <div class="cal-res-name">${ev.summary.split('(')[0].trim()}</div>
+        <div class="cal-res-dates">${ev.start.toLocaleDateString('fr-FR')} → ${ev.end.toLocaleDateString('fr-FR')}</div>
+      </div>
+      <span class="cal-res-nights">${nights} nuit${nights>1?'s':''}</span>
+    </div>`;
+  }).join('');
+}
+
+function calPrev()  { _calViewDate = new Date(_calViewDate.getFullYear(), _calViewDate.getMonth()-1, 1); renderCalendar(_calViewDate); }
+function calNext()  { _calViewDate = new Date(_calViewDate.getFullYear(), _calViewDate.getMonth()+1, 1); renderCalendar(_calViewDate); }
+function calToday() { _calViewDate = new Date(); renderCalendar(_calViewDate); }
 
 // ══════════════════════════════════════════════════════════
 // MOOD BOARD
