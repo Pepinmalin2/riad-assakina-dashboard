@@ -1780,7 +1780,7 @@ function renderAvailabilities() {
   const daysToSat = (6 - cur.getDay() + 7) % 7 || 7;
   cur.setDate(cur.getDate() + daysToSat);
 
-  while (cur < limit && slots.length < 10) {
+  while (cur < limit && slots.length < 3) {
     const sat = new Date(cur);
     const sun = new Date(cur); sun.setDate(sat.getDate() + 1);
 
