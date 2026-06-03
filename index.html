@@ -1782,7 +1782,7 @@ function renderUpcoming() {
   const propColor = { dn: '#D97706', as: '#8B4513' };
   list.innerHTML = upcoming.map(ev => {
     const nights = Math.round((ev.end - ev.start) / 86400000) + 1;
-    const phoneInfo = ev.phone4 ? `<span class="cal-res-nights" style="background:#EFF6FF;color:#1D4ED8">📞 ••••${ev.phone4}</span>` : '';
+    const phoneInfo = '';
     const linkInfo  = ev.confCode ? `<a href="https://www.airbnb.com/hosting/reservations/details/${ev.confCode}" target="_blank" style="font-size:0.7rem;color:var(--terracotta);margin-left:4px;text-decoration:none">🔗 ${ev.confCode}</a>` : '';
     return `<div class="cal-res-item">
       <div class="cal-res-dot" style="background:${propColor[ev.prop]}"></div>
