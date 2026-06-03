@@ -1289,9 +1289,13 @@ function switchTab(tabId, btn) {
     initCalendar();
     _calInitialized = true;
   }
-  if (tabId === 'moodboard' && !_mbInitialized) {
-    initMoodBoard();
-    _mbInitialized = true;
+  if (tabId === 'moodboard') {
+    if (!_mbInitialized) {
+      initMoodBoard();
+      _mbInitialized = true;
+    } else {
+      requestAnimationFrame(() => Object.keys(MB_IMGS).forEach(cat => mbLayout('mb-' + cat)));
+    }
   }
 }
 
@@ -1929,21 +1933,28 @@ function mbColCount() {
 function mbLayout(galleryId) {
   const gallery = document.getElementById(galleryId);
   if (!gallery) return;
-  const items  = Array.from(gallery.querySelectorAll('.mb-item'));
+  const items = Array.from(gallery.querySelectorAll('.mb-item'));
   if (!items.length) return;
-  const gap    = 12;
-  const cols   = mbColCount();
-  const total  = gallery.offsetWidth;
-  const colW   = (total - gap * (cols - 1)) / cols;
-  const heights = new Array(cols).fill(0);
-  items.forEach(item => {
-    const c = heights.indexOf(Math.min(...heights));
-    item.style.width  = colW + 'px';
-    item.style.left   = (c * (colW + gap)) + 'px';
-    item.style.top    = heights[c] + 'px';
-    heights[c] += item.offsetHeight + gap;
+  const gap  = 12;
+  const cols = mbColCount();
+  const total = gallery.offsetWidth;
+  if (!total) return;
+  const colW = (total - gap * (cols - 1)) / cols;
+
+  // 1. Fixer la largeur de chaque item pour que le navigateur calcule leur hauteur
+  items.forEach(item => { item.style.width = colW + 'px'; item.style.position = 'absolute'; });
+
+  // 2. Attendre le reflow puis placer les items
+  requestAnimationFrame(() => {
+    const heights = new Array(cols).fill(0);
+    items.forEach(item => {
+      const c = heights.indexOf(Math.min(...heights));
+      item.style.left = (c * (colW + gap)) + 'px';
+      item.style.top  = heights[c] + 'px';
+      heights[c] += item.offsetHeight + gap;
+    });
+    gallery.style.height = Math.max(...heights) + 'px';
   });
-  gallery.style.height = Math.max(...heights) + 'px';
 }
 
 function initMoodBoard() {
@@ -1963,7 +1974,7 @@ function initMoodBoard() {
     });
   });
 
-  // Déclenche le layout de chaque galerie dès que ses images sont chargées
+  // Layout dès que toutes les images d'une galerie sont chargées
   const galleryCounts = {};
   const galleryLoaded = {};
   allImgs.forEach(({ img, galleryId }) => {
@@ -1973,9 +1984,11 @@ function initMoodBoard() {
       galleryLoaded[galleryId]++;
       if (galleryLoaded[galleryId] === galleryCounts[galleryId]) {
         mbLayout(galleryId);
+        // Second passe pour corriger les éventuels décalages post-render
+        setTimeout(() => mbLayout(galleryId), 150);
       }
     };
-    if (img.complete) check();
+    if (img.complete && img.naturalHeight > 0) check();
     else { img.onload = check; img.onerror = check; }
   });
 
