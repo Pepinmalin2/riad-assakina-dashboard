@@ -485,11 +485,11 @@
 <!-- NAVIGATION ONGLETS -->
 <div class="tab-nav-wrap">
   <div class="tab-nav">
-    <button class="tab-btn tab-btn-gen active" onclick="switchTab('general', this)">📊 Général</button>
+    <button class="tab-btn active" onclick="switchTab('calendrier', this)">🗓 Réservations</button>
+    <button class="tab-btn tab-btn-gen" onclick="switchTab('general', this)">📊 Bilan</button>
     <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
-    <button class="tab-btn" onclick="switchTab('calendrier', this)">🗓 Calendrier</button>
-    <button class="tab-btn tab-btn-mood" onclick="switchTab('moodboard', this)">🎨 Photos</button>
+    <button class="tab-btn tab-btn-mood" onclick="switchTab('moodboard', this)">🎨 Mood Board</button>
   </div>
 </div>
 
@@ -948,7 +948,7 @@
 
 
 <!-- ═══════════════════════════════════════════ ONGLET 3 : GÉNÉRAL -->
-<div id="tab-general" class="tab-content active">
+<div id="tab-general" class="tab-content">
 
   <div class="prop-banner prop-banner-gen">
     <div>
@@ -1141,7 +1141,7 @@
 </div><!-- /tab-general -->
 
 <!-- ═══════════════════════════════════════════ ONGLET 4 : CALENDRIER -->
-<div id="tab-calendrier" class="tab-content">
+<div id="tab-calendrier" class="tab-content active">
 
   <div class="prop-banner prop-banner-darnum">
     <div>
@@ -2071,11 +2071,9 @@ document.getElementById('headerDate').textContent = new Date().toLocaleDateStrin
 // Assakina : DOM tables (pas les charts — lazy au clic)
 renderKPIs();
 renderFinTable();
-// Général : affiché par défaut, initialisé immédiatement
-renderKPIsGen();
-renderFinTableGen();
-initChartsGen();
-_genInitialized = true;
+// Réservations : affiché par défaut, initialisé immédiatement
+initCalendar();
+_calInitialized = true;
 </script>
 </body>
 </html>
