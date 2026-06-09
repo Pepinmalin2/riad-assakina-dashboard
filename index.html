@@ -1179,6 +1179,9 @@
     <div class="cal-upcoming-title">📈 Historique taux de remplissage — Dar Num</div>
     <div class="chart-card" style="margin-top:12px">
       <canvas id="chartHistorique" style="max-height:200px"></canvas>
+      <p style="text-align:center;font-size:0.75rem;color:#888;margin-top:8px">
+        ● mois en cours (jours écoulés uniquement) &nbsp;|&nbsp; vert ≥ 75 % &nbsp;|&nbsp; orange ≥ 45 % &nbsp;|&nbsp; rouge &lt; 45 %
+      </p>
     </div>
   </div>
 
@@ -1826,14 +1829,18 @@ function renderHistorique() {
     let rate = null;
 
     if (i === 0) {
-      // Mois courant — calculé depuis l'iCal en temps réel
-      const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+      // Mois courant — calculé uniquement sur les jours écoulés (pas de projection future)
+      const todayDay = now.getDate();
       let res = 0;
-      for (let day = 1; day <= days; day++) {
+      for (let day = 1; day <= todayDay; day++) {
         const date = new Date(d.getFullYear(), d.getMonth(), day);
         if (_calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end)) res++;
       }
-      rate = Math.min(100, Math.round(res / days * 100));
+      rate = Math.min(100, Math.round(res / todayDay * 100));
+      labels.push(label + ' ●');
+      data.push(rate);
+      colors.push('#2563EB'); // Bleu = mois en cours (pas encore terminé)
+      continue;
     } else if (HISTORIQUE_DN[key] !== undefined) {
       rate = HISTORIQUE_DN[key].taux;
     }
