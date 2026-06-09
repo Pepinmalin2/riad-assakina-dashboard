@@ -1180,7 +1180,7 @@
     <div class="chart-card" style="margin-top:12px">
       <canvas id="chartHistorique" style="max-height:200px"></canvas>
       <p style="text-align:center;font-size:0.75rem;color:#888;margin-top:8px">
-        ● mois en cours (jours écoulés uniquement) &nbsp;|&nbsp; vert ≥ 75 % &nbsp;|&nbsp; orange ≥ 45 % &nbsp;|&nbsp; rouge &lt; 45 %
+        <span style="color:#C9A227">■</span> mois terminé &nbsp;|&nbsp; <span style="color:rgba(201,162,39,0.55)">■</span> ● mois en cours (réservations confirmées)
       </p>
     </div>
   </div>
@@ -1829,17 +1829,17 @@ function renderHistorique() {
     let rate = null;
 
     if (i === 0) {
-      // Mois courant — calculé uniquement sur les jours écoulés (pas de projection future)
-      const todayDay = now.getDate();
+      // Mois courant — toutes les réservations du mois (passées + futures déjà confirmées)
+      const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
       let res = 0;
-      for (let day = 1; day <= todayDay; day++) {
+      for (let day = 1; day <= days; day++) {
         const date = new Date(d.getFullYear(), d.getMonth(), day);
         if (_calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end)) res++;
       }
-      rate = Math.min(100, Math.round(res / todayDay * 100));
+      rate = Math.min(100, Math.round(res / days * 100));
       labels.push(label + ' ●');
       data.push(rate);
-      colors.push('#2563EB'); // Bleu = mois en cours (pas encore terminé)
+      colors.push('rgba(201,162,39,0.55)'); // Amber clair = mois en cours (projection)
       continue;
     } else if (HISTORIQUE_DN[key] !== undefined) {
       rate = HISTORIQUE_DN[key].taux;
@@ -1848,7 +1848,7 @@ function renderHistorique() {
     if (rate !== null) {
       labels.push(label);
       data.push(rate);
-      colors.push(rate >= 75 ? '#16A34A' : rate >= 45 ? '#D97706' : '#DC2626');
+      colors.push('#C9A227'); // Amber Dar Num pour tous les mois terminés
     }
   }
 
