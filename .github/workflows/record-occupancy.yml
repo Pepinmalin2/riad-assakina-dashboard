@@ -1,0 +1,48 @@
+name: Enregistrement taux de remplissage mensuel
+
+on:
+  schedule:
+    - cron: '0 22 28-31 * *'
+  workflow_dispatch:
+
+jobs:
+  record-occupancy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Verifier si dernier jour du mois
+        id: check
+        run: |
+          TOMORROW=$(date -u -d "tomorrow" +%d)
+          if [ "$TOMORROW" = "01" ]; then
+            echo "is_last_day=true" >> $GITHUB_OUTPUT
+            echo "Dernier jour du mois - enregistrement du taux"
+          else
+            echo "is_last_day=false" >> $GITHUB_OUTPUT
+            echo "Pas le dernier jour (demain=$TOMORROW) - rien a faire"
+          fi
+
+      - name: Checkout
+        if: steps.check.outputs.is_last_day == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.check.outputs.is_last_day == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Calculer et enregistrer le taux
+        if: steps.check.outputs.is_last_day == 'true'
+        run: node scripts/record-occupancy.js
+
+      - name: Commit et deploy
+        if: steps.check.outputs.is_last_day == 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Auto: taux de remplissage $(date -u +'%B %Y')"
+          git push

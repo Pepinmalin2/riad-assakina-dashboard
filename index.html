@@ -1175,6 +1175,13 @@
     <div class="cal-occ-wrap" id="cal-occupancy"></div>
   </div>
 
+  <div class="cal-upcoming" style="margin-top:24px">
+    <div class="cal-upcoming-title">📈 Historique taux de remplissage — Dar Num</div>
+    <div class="chart-card" style="margin-top:12px">
+      <canvas id="chartHistorique" style="max-height:200px"></canvas>
+    </div>
+  </div>
+
   <div class="cal-upcoming">
     <div class="cal-upcoming-title">Prochaines réservations</div>
     <div id="cal-upcoming-list"></div>
@@ -1641,6 +1648,11 @@ function initChartsGen() {
 // ══════════════════════════════════════════════════════════
 // CALENDRIER — iCal Airbnb Dar Num
 // ══════════════════════════════════════════════════════════
+// Historique taux de remplissage Dar Num — mis à jour automatiquement le dernier jour de chaque mois
+const HISTORIQUE_DN = {
+  // FIN_HISTORIQUE_DN
+};
+
 const CAL_SOURCES = [
   { prop: 'dn', label: 'Dar Num',        url: 'https://www.airbnb.fr/calendar/ical/734016384586290594.ics?t=f0132a0b8db74ee79f67e93aa267d1f0' },
   { prop: 'as', label: 'Riad Assakina',  url: null }, // à brancher dès que l'iCal Assakina est disponible
@@ -1671,6 +1683,7 @@ async function initCalendar() {
     document.getElementById('cal-status').textContent = _calEvents.filter(e=>!e.isBlocked).length + ' réservations';
     renderCalendar(_calViewDate);
     renderOccupancy();
+    renderHistorique();
     renderUpcoming();
     renderAvailabilities();
   } catch(e) {
@@ -1797,6 +1810,75 @@ function renderUpcoming() {
       </div>
     </div>`;
   }).join('');
+}
+
+function renderHistorique() {
+  const ctx = document.getElementById('chartHistorique');
+  if (!ctx) return;
+  const now    = new Date();
+  const labels = [], data = [], colors = [];
+
+  // 11 mois passés depuis l'historique + mois courant depuis l'iCal
+  for (let i = 11; i >= 0; i--) {
+    const d     = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key   = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const label = d.toLocaleDateString('fr-FR', { month: 'short' }) + ' ' + String(d.getFullYear()).slice(2);
+    let rate = null;
+
+    if (i === 0) {
+      // Mois courant — calculé depuis l'iCal en temps réel
+      const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+      let res = 0;
+      for (let day = 1; day <= days; day++) {
+        const date = new Date(d.getFullYear(), d.getMonth(), day);
+        if (_calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end)) res++;
+      }
+      rate = Math.min(100, Math.round(res / days * 100));
+    } else if (HISTORIQUE_DN[key] !== undefined) {
+      rate = HISTORIQUE_DN[key].taux;
+    }
+
+    if (rate !== null) {
+      labels.push(label);
+      data.push(rate);
+      colors.push(rate >= 75 ? '#16A34A' : rate >= 45 ? '#D97706' : '#DC2626');
+    }
+  }
+
+  if (!labels.length) {
+    ctx.parentElement.style.display = 'none';
+    return;
+  }
+
+  // Plugin inline pour afficher le % au-dessus des barres
+  const labelPlugin = {
+    id: 'barLabels',
+    afterDraw(chart) {
+      const c = chart.ctx;
+      chart.data.datasets.forEach((ds, i) => {
+        chart.getDatasetMeta(i).data.forEach((bar, idx) => {
+          c.save();
+          c.fillStyle = '#555';
+          c.font = 'bold 11px sans-serif';
+          c.textAlign = 'center';
+          c.textBaseline = 'bottom';
+          c.fillText(ds.data[idx] + '%', bar.x, bar.y - 3);
+          c.restore();
+        });
+      });
+    }
+  };
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderWidth: 0 }] },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.parsed.y + ' %' } } },
+      scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + ' %' } } }
+    },
+    plugins: [labelPlugin]
+  });
 }
 
 function renderOccupancy() {
