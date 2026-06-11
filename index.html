@@ -296,23 +296,30 @@
     }
 
     /* ── ONGLET AVIS */
-    .reviews-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 768px) { .reviews-cols { grid-template-columns: 1fr; } }
-    .review-riad-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
-    .review-riad-name { font-size: 1rem; font-weight: 700; }
-    .review-score-wrap { display: flex; align-items: baseline; gap: 6px; }
-    .review-score { font-size: 2rem; font-weight: 800; line-height: 1; }
-    .review-stars { color: #F59E0B; font-size: 1rem; }
-    .review-total { font-size: 0.75rem; color: var(--text-light); }
-    .review-card { background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
-    .review-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .review-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: white; flex-shrink: 0; }
-    .review-meta { flex: 1; min-width: 0; }
-    .review-author { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .review-row2 { display: flex; align-items: center; gap: 6px; }
-    .review-stars-sm { color: #F59E0B; font-size: 0.8rem; }
-    .review-date { font-size: 0.73rem; color: var(--text-light); }
-    .review-text { font-size: 0.81rem; color: var(--text); line-height: 1.55; }
+    .rev-section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
+    .rev-section-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; cursor: pointer; gap: 12px; transition: background .15s; }
+    .rev-section-header:hover { background: rgba(0,0,0,0.03); }
+    .rev-header-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .rev-riad-name { font-size: 1rem; font-weight: 700; }
+    .rev-score-big { font-size: 1.7rem; font-weight: 800; line-height: 1; }
+    .rev-stars { color: #F59E0B; font-size: 0.95rem; }
+    .rev-total { font-size: 0.75rem; color: var(--text-light); }
+    .rev-chevron { font-size: 1rem; color: var(--text-light); transition: transform .25s; }
+    .rev-section.open .rev-chevron { transform: rotate(180deg); }
+    .rev-summary { padding: 0 20px 16px; font-size: 0.83rem; color: var(--text); line-height: 1.6; border-bottom: 1px solid var(--border); font-style: italic; }
+    .rev-summary strong { font-style: normal; color: var(--terracotta); font-size: 0.78rem; text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 4px; }
+    .rev-cards { padding: 14px 20px; display: none; }
+    .rev-section.open .rev-cards { display: block; }
+    .rev-card { background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .rev-card:last-child { margin-bottom: 0; }
+    .rev-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .rev-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: white; flex-shrink: 0; }
+    .rev-meta { flex: 1; min-width: 0; }
+    .rev-author { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rev-row2 { display: flex; align-items: center; gap: 6px; }
+    .rev-stars-sm { color: #F59E0B; font-size: 0.8rem; }
+    .rev-date { font-size: 0.73rem; color: var(--text-light); }
+    .rev-text { font-size: 0.81rem; color: var(--text); line-height: 1.55; }
     .reviews-placeholder { text-align: center; padding: 40px 20px; color: var(--text-light); }
     .reviews-setup { background: var(--card); border: 2px dashed var(--border); border-radius: 16px; padding: 32px 24px; text-align: center; }
     .reviews-setup h3 { margin-bottom: 8px; color: var(--terracotta); font-size: 1rem; }
@@ -472,10 +479,10 @@
 <div class="tab-nav-wrap">
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('calendrier', this)">🗓 Réservations</button>
+    <button class="tab-btn" onclick="switchTab('reviews', this)">⭐ Avis</button>
     <button class="tab-btn tab-btn-gen" onclick="switchTab('general', this)">📊 Bilan</button>
     <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
-    <button class="tab-btn" onclick="switchTab('reviews', this)">⭐ Avis</button>
   </div>
 </div>
 
@@ -1205,7 +1212,7 @@
     </div>
   </div>
 
-  <div id="reviews-cols" class="reviews-cols"></div>
+  <div id="reviews-list"></div>
 
 </div><!-- /tab-reviews -->
 
@@ -2050,41 +2057,41 @@ const RIADS_PLACES = [
   { id: 'assakina', label: 'Riad Assakina', query: 'Riad Assakina Luxury Riad Marrakech', lat: 31.6208589, lng: -7.98218,   color: '#8B4513' },
 ];
 
+function toggleRevSection(id) {
+  document.getElementById('revsec-' + id).classList.toggle('open');
+}
+
 function initReviews() {
   if (!GOOGLE_PLACES_KEY || GOOGLE_PLACES_KEY === 'VOTRE_CLE_API_ICI') {
     document.getElementById('reviews-no-key').style.display = 'block';
-    document.getElementById('reviews-cols').style.display   = 'none';
     return;
   }
   document.getElementById('reviews-no-key').style.display = 'none';
-  document.getElementById('reviews-cols').style.display   = 'grid';
   RIADS_PLACES.forEach(riad => loadRiadReviews(riad));
 }
 
 async function loadRiadReviews(riad) {
-  const container = document.getElementById('reviews-cols');
-  let card = document.getElementById('rev-' + riad.id);
-  if (!card) {
-    card = document.createElement('div');
-    card.id = 'rev-' + riad.id;
-    card.className = 'chart-card';
-    container.appendChild(card);
+  const list = document.getElementById('reviews-list');
+  let sec = document.getElementById('revsec-' + riad.id);
+  if (!sec) {
+    sec = document.createElement('div');
+    sec.id = 'revsec-' + riad.id;
+    sec.className = 'rev-section';
+    sec.innerHTML = '<div class="reviews-placeholder">Chargement…</div>';
+    list.appendChild(sec);
   }
-  card.innerHTML = '<div class="reviews-placeholder">Chargement des avis…</div>';
 
   try {
     const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
       method: 'POST',
       headers: {
-        'Content-Type':    'application/json',
-        'X-Goog-Api-Key':  GOOGLE_PLACES_KEY,
-        'X-Goog-FieldMask': 'places.id,places.displayName,places.rating,places.userRatingCount,places.reviews'
+        'Content-Type':     'application/json',
+        'X-Goog-Api-Key':   GOOGLE_PLACES_KEY,
+        'X-Goog-FieldMask': 'places.rating,places.userRatingCount,places.reviews,places.editorialSummary'
       },
       body: JSON.stringify({
         textQuery: riad.query,
-        locationBias: {
-          circle: { center: { latitude: riad.lat, longitude: riad.lng }, radius: 100 }
-        },
+        locationBias: { circle: { center: { latitude: riad.lat, longitude: riad.lng }, radius: 100 } },
         maxResultCount: 1
       })
     });
@@ -2092,20 +2099,35 @@ async function loadRiadReviews(riad) {
     const data  = await res.json();
     const place = data.places && data.places[0];
     if (!place) throw new Error('Établissement introuvable');
-    renderRiadReviews(riad, place, card);
+    renderRevSection(riad, place, sec);
     document.getElementById('reviews-badge').textContent =
       'Mis à jour ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   } catch (e) {
-    card.innerHTML = `<div class="reviews-placeholder" style="color:#DC2626">Erreur : ${e.message}</div>`;
+    sec.innerHTML = `<div class="reviews-placeholder" style="color:#DC2626">Erreur : ${e.message}</div>`;
   }
 }
 
-function renderRiadReviews(riad, place, card) {
+function buildSummary(reviews, editorialSummary) {
+  if (editorialSummary?.text) return editorialSummary.text;
+  const best = reviews.filter(r => (r.rating || 0) >= 4 && r.text?.text);
+  if (!best.length) return null;
+  // Extraire les premières phrases des 3 meilleurs avis
+  const snippets = best.slice(0, 3).map(r => {
+    const t = r.text.text.replace(/\n/g, ' ').trim();
+    const dot = t.search(/[.!?]/);
+    return dot > 20 ? t.slice(0, dot + 1) : t.slice(0, 120);
+  });
+  return snippets.join(' ');
+}
+
+function renderRevSection(riad, place, sec) {
   const rating  = place.rating || 0;
   const total   = place.userRatingCount || 0;
   const reviews = place.reviews || [];
   const avatarBg = ['#8B4513','#C9A227','#2D6A4F','#1A5276','#7B241C'];
   const stars = n => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+
+  const summary = buildSummary(reviews, place.editorialSummary);
 
   const cardsHtml = reviews.map((r, i) => {
     const name     = r.authorAttribution?.displayName || 'Voyageur';
@@ -2113,35 +2135,37 @@ function renderRiadReviews(riad, place, card) {
     const text     = r.text?.text || '';
     const date     = r.relativePublishTimeDescription || '';
     return `
-      <div class="review-card">
-        <div class="review-card-top">
-          <div class="review-avatar" style="background:${avatarBg[i % avatarBg.length]}">${initials}</div>
-          <div class="review-meta">
-            <div class="review-author">${name}</div>
-            <div class="review-row2">
-              <span class="review-stars-sm">${stars(r.rating || 5)}</span>
-              <span class="review-date">${date}</span>
+      <div class="rev-card">
+        <div class="rev-card-top">
+          <div class="rev-avatar" style="background:${avatarBg[i % avatarBg.length]}">${initials}</div>
+          <div class="rev-meta">
+            <div class="rev-author">${name}</div>
+            <div class="rev-row2">
+              <span class="rev-stars-sm">${stars(r.rating || 5)}</span>
+              <span class="rev-date">${date}</span>
             </div>
           </div>
         </div>
-        <div class="review-text">${text.slice(0, 300)}${text.length > 300 ? '…' : ''}</div>
+        <div class="rev-text">${text.replace(/\n/g, '<br>')}</div>
       </div>`;
   }).join('');
 
-  card.innerHTML = `
-    <div class="review-riad-header">
-      <div>
-        <div class="review-riad-name" style="color:${riad.color}">${riad.label}</div>
-        <div class="review-total">${total} avis Google</div>
-      </div>
-      <div class="review-score-wrap">
-        <span class="review-score" style="color:${riad.color}">${rating.toFixed(1)}</span>
+  sec.innerHTML = `
+    <div class="rev-section-header" onclick="toggleRevSection('${riad.id}')">
+      <div class="rev-header-left">
+        <span class="rev-riad-name" style="color:${riad.color}">${riad.label}</span>
+        <span class="rev-score-big" style="color:${riad.color}">${rating.toFixed(1)}</span>
         <div>
-          <div class="review-stars">${stars(rating)}</div>
+          <div class="rev-stars">${stars(rating)}</div>
+          <div class="rev-total">${total} avis Google</div>
         </div>
       </div>
+      <span class="rev-chevron">▼</span>
     </div>
-    ${cardsHtml || '<div class="reviews-placeholder">Aucun avis disponible</div>'}`;
+    ${summary ? `<div class="rev-summary"><strong>Synthèse des commentaires</strong>${summary}</div>` : ''}
+    <div class="rev-cards">
+      ${cardsHtml || '<div class="reviews-placeholder">Aucun avis disponible</div>'}
+    </div>`;
 }
 
 // ── Init
