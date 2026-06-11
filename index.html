@@ -2109,20 +2109,20 @@ async function loadRiadReviews(riad) {
 }
 
 function buildSummary(reviews, editorialSummary) {
-  // Résumé éditorial Google si disponible et suffisamment long
-  if (editorialSummary?.text && editorialSummary.text.length > 40) return editorialSummary.text;
-  // Sinon : extraire des phrases complètes depuis les meilleurs avis
+  // Résumé éditorial Google uniquement s'il est en français
+  if (editorialSummary?.text && editorialSummary.text.length > 40 && editorialSummary.languageCode === 'fr') {
+    return editorialSummary.text;
+  }
+  // Extraire des phrases complètes depuis les avis (traduits en fr via languageCode dans la requête)
   const best = reviews.filter(r => (r.rating || 0) >= 4 && r.text?.text && r.text.text.length > 40);
   if (!best.length) return null;
   const sentences = [];
   best.slice(0, 4).forEach(r => {
     const t = r.text.text.replace(/\n+/g, ' ').trim();
-    // Découper en phrases complètes (se terminant par . ! ?)
     const found = t.match(/[^.!?]{20,}[.!?]/g);
     if (found && found[0]) sentences.push(found[0].trim());
   });
   if (!sentences.length) return null;
-  // Dédupliquer et limiter à 3 phrases
   return [...new Set(sentences)].slice(0, 3).join(' ');
 }
 
