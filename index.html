@@ -297,42 +297,6 @@
 
     /* ── ONGLET MOOD BOARD */
     .tab-btn-mood { }
-    .tab-btn-mood.active { color: var(--terracotta); border-bottom-color: var(--gold); }
-    .tab-btn.tab-btn-mood:hover { color: var(--terracotta); }
-    .mb-category { margin-bottom: 32px; }
-    .mb-category-title {
-      font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1.2px; color: var(--text-light);
-      margin-bottom: 16px; padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    .mb-gallery {
-      position: relative;
-      width: 100%;
-    }
-    .mb-item {
-      position: absolute;
-      cursor: pointer; overflow: hidden; border-radius: 10px;
-      transition: transform .25s, box-shadow .25s;
-      box-shadow: 0 2px 8px rgba(139,69,19,0.10);
-      background: var(--border);
-    }
-    .mb-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(139,69,19,0.18); }
-    .mb-item img { width: 100%; height: auto; display: block; transition: transform .3s; }
-    .mb-item:hover img { transform: scale(1.03); }
-    .mb-modal {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95); z-index: 300;
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .mb-modal.active { display: flex; }
-    .mb-modal-img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
-    .mb-close { position: absolute; top: 1rem; right: 1rem; color: #fff; font-size: 1.8rem; cursor: pointer; border: none; background: none; padding: .5rem; line-height: 1; }
-    .mb-prev, .mb-next { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 2rem; cursor: pointer; border: none; background: none; padding: 1rem .75rem; }
-    .mb-prev { left: .5rem; } .mb-next { right: .5rem; }
-    /* Chambres : 6 photos -> 3 colonnes sur desktop pour un remplissage equilibre 2-2-2 (evite les colonnes a moitie vides) */
-    @media (min-width: 1025px) { #mb-chambres { column-count: 3; } }
-
     /* ── ONGLET CALENDRIER */
     .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .cal-title   { font-size: 1.15rem; font-weight: 700; color: var(--terracotta); text-transform: capitalize; }
@@ -490,7 +454,6 @@
     <button class="tab-btn tab-btn-gen" onclick="switchTab('general', this)">📊 Bilan</button>
     <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
-    <button class="tab-btn tab-btn-mood" onclick="switchTab('moodboard', this)">🎨 Mood Board</button>
   </div>
 </div>
 
@@ -1198,47 +1161,6 @@
 
 </div><!-- /tab-calendrier -->
 
-<!-- ═══════════════════════════════════════════ ONGLET 5 : MOOD BOARD -->
-<div id="tab-moodboard" class="tab-content">
-
-  <div class="prop-banner">
-    <div>
-      <span class="prop-tag">Riad Assakina</span>
-      <span class="prop-detail">Mood Board · Inspirations décoration &amp; ambiances</span>
-    </div>
-    <span class="prop-badge">24 photos · 5 catégories</span>
-  </div>
-
-  <div class="mb-category">
-    <div class="mb-category-title">🏔 Terrasse</div>
-    <div class="mb-gallery" id="mb-terrasse"></div>
-  </div>
-  <div class="mb-category">
-    <div class="mb-category-title">🛏 Chambres</div>
-    <div class="mb-gallery" id="mb-chambres"></div>
-  </div>
-  <div class="mb-category">
-    <div class="mb-category-title">🚿 Salle de Bain</div>
-    <div class="mb-gallery" id="mb-salle-bain"></div>
-  </div>
-  <div class="mb-category">
-    <div class="mb-category-title">🌿 Patio</div>
-    <div class="mb-gallery" id="mb-patio"></div>
-  </div>
-  <div class="mb-category">
-    <div class="mb-category-title">🎨 Couleurs</div>
-    <div class="mb-gallery" id="mb-couleurs"></div>
-  </div>
-
-</div><!-- /tab-moodboard -->
-
-<!-- Modal Mood Board -->
-<div class="mb-modal" id="mbModal">
-  <button class="mb-close" onclick="mbClose()">✕</button>
-  <button class="mb-prev" onclick="mbPrev()">‹</button>
-  <img class="mb-modal-img" id="mbModalImg" src="" alt="">
-  <button class="mb-next" onclick="mbNext()">›</button>
-</div>
 
 </main>
 
@@ -1273,7 +1195,6 @@ let _assakinaChartsInit = false;
 let _dnInitialized      = false;
 let _genInitialized     = false;
 let _calInitialized     = false;
-let _mbInitialized      = false;
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1298,14 +1219,6 @@ function switchTab(tabId, btn) {
   if (tabId === 'calendrier' && !_calInitialized) {
     initCalendar();
     _calInitialized = true;
-  }
-  if (tabId === 'moodboard') {
-    if (!_mbInitialized) {
-      initMoodBoard();
-      _mbInitialized = true;
-    } else {
-      requestAnimationFrame(() => Object.keys(MB_IMGS).forEach(cat => mbLayout('mb-' + cat)));
-    }
   }
 }
 
@@ -1999,119 +1912,6 @@ function renderAvailabilities() {
 function calPrev()  { _calViewDate = new Date(_calViewDate.getFullYear(), _calViewDate.getMonth()-1, 1); renderCalendar(_calViewDate); }
 function calNext()  { _calViewDate = new Date(_calViewDate.getFullYear(), _calViewDate.getMonth()+1, 1); renderCalendar(_calViewDate); }
 function calToday() { _calViewDate = new Date(); renderCalendar(_calViewDate); }
-
-// ══════════════════════════════════════════════════════════
-// MOOD BOARD
-// ══════════════════════════════════════════════════════════
-const MB_IMGS = {
-  terrasse:   ['Terrasse 1.JPG', ' Terrasse 2.JPG', 'Terrasse 3.JPG', 'Terrasse 4.JPG', 'Terrasse 5.JPG', 'Terrasse 6.JPG', 'Terrasse 7.JPG'],
-  chambres:   ['Chambre 1.JPG', 'Chambre 2.JPG', 'Chambre 3.JPG', 'Chambre 4.JPG', 'Chambre 5.JPG', 'Chambre 6.JPG'],
-  'salle-bain': ['SDB 1.JPG', 'SDB 2.JPG', 'SDB 3.JPG', 'SDB4.JPG', 'SDB 5.JPG'],
-  patio:      ['Patio.JPG', 'Patio 2.JPG', 'Patio 3.JPG', 'Patio 4.JPG', 'Patio 5.JPG'],
-  couleurs:   ['Couleurs.JPG']
-};
-const MB_FOLDERS = { terrasse: 'Terrasse', chambres: 'Chambres', 'salle-bain': 'Salle-de-bain', patio: 'Patio', couleurs: 'Couleurs' };
-let _mb = { cat: '', idx: 0 };
-
-function mbColCount() {
-  if (window.innerWidth <= 640)  return 2;
-  if (window.innerWidth <= 1024) return 3;
-  return 4;
-}
-
-function mbLayout(galleryId) {
-  const gallery = document.getElementById(galleryId);
-  if (!gallery) return;
-  const items = Array.from(gallery.querySelectorAll('.mb-item'));
-  if (!items.length) return;
-  const gap  = 12;
-  const cols = mbColCount();
-  const total = gallery.offsetWidth;
-  if (!total) return;
-  const colW = (total - gap * (cols - 1)) / cols;
-
-  // 1. Fixer la largeur de chaque item pour que le navigateur calcule leur hauteur
-  items.forEach(item => { item.style.width = colW + 'px'; item.style.position = 'absolute'; });
-
-  // 2. Attendre le reflow puis placer les items
-  requestAnimationFrame(() => {
-    const heights = new Array(cols).fill(0);
-    items.forEach(item => {
-      const c = heights.indexOf(Math.min(...heights));
-      item.style.left = (c * (colW + gap)) + 'px';
-      item.style.top  = heights[c] + 'px';
-      heights[c] += item.offsetHeight + gap;
-    });
-    gallery.style.height = Math.max(...heights) + 'px';
-  });
-}
-
-function initMoodBoard() {
-  const allImgs = [];
-  Object.keys(MB_IMGS).forEach(cat => {
-    const el = document.getElementById('mb-' + cat);
-    MB_IMGS[cat].forEach((file, i) => {
-      const div = document.createElement('div');
-      div.className = 'mb-item';
-      const img = document.createElement('img');
-      img.src = 'images/' + MB_FOLDERS[cat] + '/' + file;
-      img.alt = file;
-      div.appendChild(img);
-      div.addEventListener('click', () => mbOpen(cat, i));
-      el.appendChild(div);
-      allImgs.push({ img, galleryId: 'mb-' + cat });
-    });
-  });
-
-  // Layout dès que toutes les images d'une galerie sont chargées
-  const galleryCounts = {};
-  const galleryLoaded = {};
-  allImgs.forEach(({ img, galleryId }) => {
-    galleryCounts[galleryId] = (galleryCounts[galleryId] || 0) + 1;
-    galleryLoaded[galleryId] = galleryLoaded[galleryId] || 0;
-    const check = () => {
-      galleryLoaded[galleryId]++;
-      if (galleryLoaded[galleryId] === galleryCounts[galleryId]) {
-        mbLayout(galleryId);
-        // Second passe pour corriger les éventuels décalages post-render
-        setTimeout(() => mbLayout(galleryId), 150);
-      }
-    };
-    if (img.complete && img.naturalHeight > 0) check();
-    else { img.onload = check; img.onerror = check; }
-  });
-
-  // Recalcule au redimensionnement
-  window.addEventListener('resize', () => {
-    Object.keys(MB_IMGS).forEach(cat => mbLayout('mb-' + cat));
-  });
-}
-
-function mbOpen(cat, idx) {
-  _mb.cat = cat; _mb.idx = idx;
-  document.getElementById('mbModalImg').src = 'images/' + MB_FOLDERS[cat] + '/' + MB_IMGS[cat][idx];
-  document.getElementById('mbModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function mbClose() {
-  document.getElementById('mbModal').classList.remove('active');
-  document.body.style.overflow = '';
-}
-function mbNext() {
-  _mb.idx = (_mb.idx + 1) % MB_IMGS[_mb.cat].length;
-  document.getElementById('mbModalImg').src = 'images/' + MB_FOLDERS[_mb.cat] + '/' + MB_IMGS[_mb.cat][_mb.idx];
-}
-function mbPrev() {
-  _mb.idx = (_mb.idx - 1 + MB_IMGS[_mb.cat].length) % MB_IMGS[_mb.cat].length;
-  document.getElementById('mbModalImg').src = 'images/' + MB_FOLDERS[_mb.cat] + '/' + MB_IMGS[_mb.cat][_mb.idx];
-}
-document.getElementById('mbModal').addEventListener('click', e => { if (e.target === document.getElementById('mbModal')) mbClose(); });
-document.addEventListener('keydown', e => {
-  if (!document.getElementById('mbModal').classList.contains('active')) return;
-  if (e.key === 'ArrowRight') mbNext();
-  if (e.key === 'ArrowLeft')  mbPrev();
-  if (e.key === 'Escape')     mbClose();
-});
 
 // ══════════════════════════════════════════════════════════
 // TOOLTIP
