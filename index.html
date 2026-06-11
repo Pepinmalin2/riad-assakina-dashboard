@@ -2091,6 +2091,7 @@ async function loadRiadReviews(riad) {
       },
       body: JSON.stringify({
         textQuery: riad.query,
+        languageCode: 'fr',
         locationBias: { circle: { center: { latitude: riad.lat, longitude: riad.lng }, radius: 100 } },
         maxResultCount: 1
       })
@@ -2108,16 +2109,21 @@ async function loadRiadReviews(riad) {
 }
 
 function buildSummary(reviews, editorialSummary) {
-  if (editorialSummary?.text) return editorialSummary.text;
-  const best = reviews.filter(r => (r.rating || 0) >= 4 && r.text?.text);
+  // Résumé éditorial Google si disponible et suffisamment long
+  if (editorialSummary?.text && editorialSummary.text.length > 40) return editorialSummary.text;
+  // Sinon : extraire des phrases complètes depuis les meilleurs avis
+  const best = reviews.filter(r => (r.rating || 0) >= 4 && r.text?.text && r.text.text.length > 40);
   if (!best.length) return null;
-  // Extraire les premières phrases des 3 meilleurs avis
-  const snippets = best.slice(0, 3).map(r => {
-    const t = r.text.text.replace(/\n/g, ' ').trim();
-    const dot = t.search(/[.!?]/);
-    return dot > 20 ? t.slice(0, dot + 1) : t.slice(0, 120);
+  const sentences = [];
+  best.slice(0, 4).forEach(r => {
+    const t = r.text.text.replace(/\n+/g, ' ').trim();
+    // Découper en phrases complètes (se terminant par . ! ?)
+    const found = t.match(/[^.!?]{20,}[.!?]/g);
+    if (found && found[0]) sentences.push(found[0].trim());
   });
-  return snippets.join(' ');
+  if (!sentences.length) return null;
+  // Dédupliquer et limiter à 3 phrases
+  return [...new Set(sentences)].slice(0, 3).join(' ');
 }
 
 function renderRevSection(riad, place, sec) {
