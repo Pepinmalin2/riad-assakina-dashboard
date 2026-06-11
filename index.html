@@ -295,8 +295,29 @@
       .prop-detail { font-size: 0.72rem; }
     }
 
-    /* ── ONGLET MOOD BOARD */
-    .tab-btn-mood { }
+    /* ── ONGLET AVIS */
+    .reviews-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .reviews-cols { grid-template-columns: 1fr; } }
+    .review-riad-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+    .review-riad-name { font-size: 1rem; font-weight: 700; }
+    .review-score-wrap { display: flex; align-items: baseline; gap: 6px; }
+    .review-score { font-size: 2rem; font-weight: 800; line-height: 1; }
+    .review-stars { color: #F59E0B; font-size: 1rem; }
+    .review-total { font-size: 0.75rem; color: var(--text-light); }
+    .review-card { background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .review-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .review-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: white; flex-shrink: 0; }
+    .review-meta { flex: 1; min-width: 0; }
+    .review-author { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .review-row2 { display: flex; align-items: center; gap: 6px; }
+    .review-stars-sm { color: #F59E0B; font-size: 0.8rem; }
+    .review-date { font-size: 0.73rem; color: var(--text-light); }
+    .review-text { font-size: 0.81rem; color: var(--text); line-height: 1.55; }
+    .reviews-placeholder { text-align: center; padding: 40px 20px; color: var(--text-light); }
+    .reviews-setup { background: var(--card); border: 2px dashed var(--border); border-radius: 16px; padding: 32px 24px; text-align: center; }
+    .reviews-setup h3 { margin-bottom: 8px; color: var(--terracotta); font-size: 1rem; }
+    .reviews-setup p { color: var(--text-light); font-size: 0.83rem; margin-bottom: 10px; line-height: 1.6; }
+    .reviews-setup code { background: var(--bg-main); padding: 2px 7px; border-radius: 4px; font-family: monospace; font-size: 0.78rem; border: 1px solid var(--border); }
     /* ── ONGLET CALENDRIER */
     .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .cal-title   { font-size: 1.15rem; font-weight: 700; color: var(--terracotta); text-transform: capitalize; }
@@ -454,6 +475,7 @@
     <button class="tab-btn tab-btn-gen" onclick="switchTab('general', this)">📊 Bilan</button>
     <button class="tab-btn" onclick="switchTab('assakina', this)">🏠 Assakina</button>
     <button class="tab-btn" onclick="switchTab('darnum', this)">🏛 Dar Num</button>
+    <button class="tab-btn" onclick="switchTab('reviews', this)">⭐ Avis</button>
   </div>
 </div>
 
@@ -1162,6 +1184,31 @@
 </div><!-- /tab-calendrier -->
 
 
+<!-- ═══════════════════════════════════════════ ONGLET : AVIS VOYAGEURS -->
+<div id="tab-reviews" class="tab-content">
+
+  <div class="prop-banner">
+    <div>
+      <span class="prop-tag">IH NUM</span>
+      <span class="prop-detail">Avis voyageurs · Google Reviews · 5 derniers commentaires</span>
+    </div>
+    <span class="prop-badge" id="reviews-badge">—</span>
+  </div>
+
+  <div id="reviews-no-key" style="display:none">
+    <div class="reviews-setup">
+      <h3>Clé API Google Places requise</h3>
+      <p>Ajoutez votre clé API dans le fichier <code>dashboard.html</code> :</p>
+      <p><code>const GOOGLE_PLACES_KEY = 'AIza...';</code></p>
+      <p>Activez l'API <strong>Places API (New)</strong> sur <strong>console.cloud.google.com</strong><br>
+      et restreignez la clé à votre domaine <strong>pepinmalin2.github.io</strong>.</p>
+    </div>
+  </div>
+
+  <div id="reviews-cols" class="reviews-cols"></div>
+
+</div><!-- /tab-reviews -->
+
 </main>
 
 <script>
@@ -1195,6 +1242,7 @@ let _assakinaChartsInit = false;
 let _dnInitialized      = false;
 let _genInitialized     = false;
 let _calInitialized     = false;
+let _reviewsInitialized = false;
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1219,6 +1267,10 @@ function switchTab(tabId, btn) {
   if (tabId === 'calendrier' && !_calInitialized) {
     initCalendar();
     _calInitialized = true;
+  }
+  if (tabId === 'reviews' && !_reviewsInitialized) {
+    initReviews();
+    _reviewsInitialized = true;
   }
 }
 
@@ -1565,6 +1617,8 @@ function initChartsGen() {
 // CALENDRIER — iCal Airbnb Dar Num
 // ══════════════════════════════════════════════════════════
 // Historique taux de remplissage Dar Num — mis à jour automatiquement le dernier jour de chaque mois
+const GOOGLE_PLACES_KEY = 'VOTRE_CLE_API_ICI';
+
 const HISTORIQUE_DN = {
   // FIN_HISTORIQUE_DN
 };
@@ -1987,6 +2041,108 @@ document.addEventListener('touchend', () => {
 document.addEventListener('touchmove', () => {
   if (_longTimer) { clearTimeout(_longTimer); _longTimer = null; }
 }, { passive: true });
+
+// ══════════════════════════════════════════════════════════
+// AVIS VOYAGEURS — Google Places API (New)
+// ══════════════════════════════════════════════════════════
+const RIADS_PLACES = [
+  { id: 'darnum',   label: 'Riad Dar Num',  query: 'Riad Dar Num Marrakech',              lat: 31.6267456, lng: -7.9820798, color: '#C9A227' },
+  { id: 'assakina', label: 'Riad Assakina', query: 'Riad Assakina Luxury Riad Marrakech', lat: 31.6208589, lng: -7.98218,   color: '#8B4513' },
+];
+
+function initReviews() {
+  if (!GOOGLE_PLACES_KEY || GOOGLE_PLACES_KEY === 'VOTRE_CLE_API_ICI') {
+    document.getElementById('reviews-no-key').style.display = 'block';
+    document.getElementById('reviews-cols').style.display   = 'none';
+    return;
+  }
+  document.getElementById('reviews-no-key').style.display = 'none';
+  document.getElementById('reviews-cols').style.display   = 'grid';
+  RIADS_PLACES.forEach(riad => loadRiadReviews(riad));
+}
+
+async function loadRiadReviews(riad) {
+  const container = document.getElementById('reviews-cols');
+  let card = document.getElementById('rev-' + riad.id);
+  if (!card) {
+    card = document.createElement('div');
+    card.id = 'rev-' + riad.id;
+    card.className = 'chart-card';
+    container.appendChild(card);
+  }
+  card.innerHTML = '<div class="reviews-placeholder">Chargement des avis…</div>';
+
+  try {
+    const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'POST',
+      headers: {
+        'Content-Type':    'application/json',
+        'X-Goog-Api-Key':  GOOGLE_PLACES_KEY,
+        'X-Goog-FieldMask': 'places.id,places.displayName,places.rating,places.userRatingCount,places.reviews'
+      },
+      body: JSON.stringify({
+        textQuery: riad.query,
+        locationBias: {
+          circle: { center: { latitude: riad.lat, longitude: riad.lng }, radius: 100 }
+        },
+        maxResultCount: 1
+      })
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'HTTP ' + res.status); }
+    const data  = await res.json();
+    const place = data.places && data.places[0];
+    if (!place) throw new Error('Établissement introuvable');
+    renderRiadReviews(riad, place, card);
+    document.getElementById('reviews-badge').textContent =
+      'Mis à jour ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {
+    card.innerHTML = `<div class="reviews-placeholder" style="color:#DC2626">Erreur : ${e.message}</div>`;
+  }
+}
+
+function renderRiadReviews(riad, place, card) {
+  const rating  = place.rating || 0;
+  const total   = place.userRatingCount || 0;
+  const reviews = place.reviews || [];
+  const avatarBg = ['#8B4513','#C9A227','#2D6A4F','#1A5276','#7B241C'];
+  const stars = n => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+
+  const cardsHtml = reviews.map((r, i) => {
+    const name     = r.authorAttribution?.displayName || 'Voyageur';
+    const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    const text     = r.text?.text || '';
+    const date     = r.relativePublishTimeDescription || '';
+    return `
+      <div class="review-card">
+        <div class="review-card-top">
+          <div class="review-avatar" style="background:${avatarBg[i % avatarBg.length]}">${initials}</div>
+          <div class="review-meta">
+            <div class="review-author">${name}</div>
+            <div class="review-row2">
+              <span class="review-stars-sm">${stars(r.rating || 5)}</span>
+              <span class="review-date">${date}</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-text">${text.slice(0, 300)}${text.length > 300 ? '…' : ''}</div>
+      </div>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="review-riad-header">
+      <div>
+        <div class="review-riad-name" style="color:${riad.color}">${riad.label}</div>
+        <div class="review-total">${total} avis Google</div>
+      </div>
+      <div class="review-score-wrap">
+        <span class="review-score" style="color:${riad.color}">${rating.toFixed(1)}</span>
+        <div>
+          <div class="review-stars">${stars(rating)}</div>
+        </div>
+      </div>
+    </div>
+    ${cardsHtml || '<div class="reviews-placeholder">Aucun avis disponible</div>'}`;
+}
 
 // ── Init
 window.scrollTo(0, 0);
