@@ -1609,6 +1609,27 @@ const CAL_SOURCES = [
 let _calEvents = [];
 let _calViewDate = new Date();
 
+// Airbnb supprime les réservations passées du flux iCal dès leur fin.
+// On accumule les jours occupés dans localStorage pour que le taux ne baisse jamais artificiellement.
+function _getOcc(ym)     { try { return new Set(JSON.parse(localStorage.getItem('occ_'+ym)||'[]')); } catch { return new Set(); } }
+function _saveOcc(ym, s) { try { localStorage.setItem('occ_'+ym, JSON.stringify([...s])); } catch {} }
+
+function countMonthOcc(year, month, calEvents) {
+  const today  = new Date(); today.setHours(0,0,0,0);
+  const total  = new Date(year, month+1, 0).getDate();
+  const ym     = `${year}-${String(month+1).padStart(2,'0')}`;
+  const stored = _getOcc(ym);
+  let res = 0;
+  for (let day = 1; day <= total; day++) {
+    const date   = new Date(year, month, day);
+    const inIcal = calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end);
+    if (inIcal) { res++; if (date < today) stored.add(day); }
+    else if (date < today && stored.has(day)) res++;
+  }
+  _saveOcc(ym, stored);
+  return res;
+}
+
 async function fetchIcalText(url) {
   const proxies = ['https://corsproxy.io/?url=', 'https://api.allorigins.win/raw?url='];
   for (const proxy of proxies) {
@@ -1779,13 +1800,9 @@ function renderHistorique() {
     let rate = null;
 
     if (i === 0) {
-      // Mois courant — toutes les réservations du mois (passées + futures déjà confirmées)
+      // Mois courant — localStorage accumule les jours passés pour compenser la suppression par Airbnb
       const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-      let res = 0;
-      for (let day = 1; day <= days; day++) {
-        const date = new Date(d.getFullYear(), d.getMonth(), day);
-        if (_calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end)) res++;
-      }
+      const res  = countMonthOcc(d.getFullYear(), d.getMonth(), _calEvents);
       rate = Math.min(100, Math.round(res / days * 100));
       labels.push(label + ' ●');
       data.push(rate);
@@ -1850,11 +1867,7 @@ function renderOccupancy() {
 
   el.innerHTML = months.map(({ year, month }) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    let reserved = 0;
-    for (let d = 1; d <= daysInMonth; d++) {
-      const date = new Date(year, month, d);
-      if (_calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end)) reserved++;
-    }
+    const reserved    = countMonthOcc(year, month, _calEvents);
     const rate = Math.round(reserved / daysInMonth * 100);
     const label = new Date(year, month, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     const color = rate >= 75 ? '#16A34A' : rate >= 45 ? '#D97706' : '#DC2626';
