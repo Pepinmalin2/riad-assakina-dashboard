@@ -1608,25 +1608,20 @@ const CAL_SOURCES = [
 ];
 let _calEvents = [];
 let _calViewDate = new Date();
+let _occupancyCache = {}; // chargé depuis occupancy.json (cron GitHub Actions quotidien)
 
-// Airbnb supprime les réservations passées du flux iCal dès leur fin.
-// On accumule les jours occupés dans localStorage pour que le taux ne baisse jamais artificiellement.
-function _getOcc(ym)     { try { return new Set(JSON.parse(localStorage.getItem('occ_'+ym)||'[]')); } catch { return new Set(); } }
-function _saveOcc(ym, s) { try { localStorage.setItem('occ_'+ym, JSON.stringify([...s])); } catch {} }
-
+// Fusionne les jours confirmés par le cron avec les données live iCal.
+// Le cron tourne la nuit et écrit les jours effectivement occupés → source de vérité partagée entre tous les utilisateurs.
 function countMonthOcc(year, month, calEvents) {
-  const today  = new Date(); today.setHours(0,0,0,0);
-  const total  = new Date(year, month+1, 0).getDate();
   const ym     = `${year}-${String(month+1).padStart(2,'0')}`;
-  const stored = _getOcc(ym);
+  const cached = new Set(_occupancyCache[ym] || []);
+  const total  = new Date(year, month+1, 0).getDate();
   let res = 0;
   for (let day = 1; day <= total; day++) {
     const date   = new Date(year, month, day);
     const inIcal = calEvents.some(ev => !ev.isBlocked && date >= ev.start && date <= ev.end);
-    if (inIcal) { res++; if (date < today) stored.add(day); }
-    else if (date < today && stored.has(day)) res++;
+    if (inIcal || cached.has(day)) res++;
   }
-  _saveOcc(ym, stored);
   return res;
 }
 
@@ -1646,13 +1641,15 @@ async function fetchIcalText(url) {
 
 async function initCalendar() {
   try {
-    const results = await Promise.all(
-      CAL_SOURCES.filter(s => s.url).map(async s => {
-        const text = await fetchIcalText(s.url);
-        return text ? parseIcal(text, s.prop) : [];
-      })
-    );
-    _calEvents = results.flat().sort((a,b) => a.start - b.start);
+    const OCC_URL   = 'https://pepinmalin2.github.io/riad-assakina-dashboard/occupancy.json';
+    const occFetch  = fetch(OCC_URL).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    const icalFetch = CAL_SOURCES.filter(s => s.url).map(async s => {
+      const text = await fetchIcalText(s.url);
+      return text ? parseIcal(text, s.prop) : [];
+    });
+    const [occData, ...icalResults] = await Promise.all([occFetch, ...icalFetch]);
+    _occupancyCache = occData || {};
+    _calEvents = icalResults.flat().sort((a,b) => a.start - b.start);
     document.getElementById('cal-status').textContent = _calEvents.filter(e=>!e.isBlocked).length + ' réservations';
     renderCalendar(_calViewDate);
     renderOccupancy();
